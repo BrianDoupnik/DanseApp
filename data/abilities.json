@@ -1,0 +1,28 @@
+{
+  "abilities": [
+    {
+      "id": "ribbon-of-influence",
+      "name": "Ribbon of Influence",
+      "text": "Once per round, draw a card and gain 1 additional victory point if the card is played immediately.",
+      "isAction": true
+    },
+    {
+      "id": "shadow-step",
+      "name": "Shadow Step",
+      "text": "Move through the crowd unnoticed, gaining initiative advantage on your next action.",
+      "isAction": false
+    },
+    {
+      "id": "courtly-manners",
+      "name": "Courtly Manners",
+      "text": "Impress nobles with impeccable etiquette, gaining bonus charm for social encounters.",
+      "isAction": false
+    },
+    {
+      "id": "intrigue-weave",
+      "name": "Intrigue Weave",
+      "text": "Spin webs of deception, allowing you to redirect accusations to another noble.",
+      "isAction": true
+    }
+  ]
+}

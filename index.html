@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Danse Macabre</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="app-shell">
+    <header class="app-header">
+      <div>
+        <h1>Danse Macabre</h1>
+        <p class="eyebrow">Companion App</p>
+      </div>
+      <div class="header-actions">
+        <button id="modeToggle">Switch to Reference</button>
+      </div>
+    </header>
+
+    <section id="statusBar" class="status-bar">
+      <span id="currentMode">Loading...</span>
+      <span id="summaryText"></span>
+    </section>
+
+    <section id="appContent" class="app-content"></section>
+  </main>
+
+  <template id="cardTemplate">
+    <article class="card"></article>
+  </template>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

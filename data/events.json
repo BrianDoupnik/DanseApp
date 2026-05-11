@@ -1,0 +1,16 @@
+{
+  "events": [
+    {
+      "id": "unexpected-guest",
+      "name": "Unexpected Guest",
+      "description": "A visiting lord enters the ballroom and shifts the attention of the crowd.",
+      "result": "Each faction adjusts hand size by 1. Resolve the effect according to scenario rules."
+    },
+    {
+      "id": "rival-entrance",
+      "name": "Rival Entrance",
+      "description": "A rival noble arrives with a dramatic flourish, drawing whispers and attention.",
+      "result": "All players must discard one card unless they spend a charm token to avoid the distraction."
+    }
+  ]
+}

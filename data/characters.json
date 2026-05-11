@@ -1,0 +1,40 @@
+{
+  "characters": [
+    {
+      "id": "madame-velours",
+      "name": "Madame Velours",
+      "faction": "House Velours",
+      "flavorText": "A cunning noble whose poise and grace turn every eye on the ballroom floor.",
+      "grace": 7,
+      "charm": 6,
+      "abilities": ["ribbon-of-influence"]
+    },
+    {
+      "id": "lord-shadowmere",
+      "name": "Lord Shadowmere",
+      "faction": "House Velours",
+      "flavorText": "A mysterious figure who moves like a shadow through the court, always one step ahead.",
+      "grace": 5,
+      "charm": 8,
+      "abilities": ["shadow-step"]
+    },
+    {
+      "id": "duchess-elegance",
+      "name": "Duchess Elegance",
+      "faction": "House Aurelian",
+      "flavorText": "The epitome of refined nobility, her presence commands respect and admiration.",
+      "grace": 8,
+      "charm": 7,
+      "abilities": ["courtly-manners"]
+    },
+    {
+      "id": "baron-deception",
+      "name": "Baron Deception",
+      "faction": "House Aurelian",
+      "flavorText": "A master of intrigue, weaving lies and truths into a tapestry of court politics.",
+      "grace": 6,
+      "charm": 9,
+      "abilities": ["intrigue-weave"]
+    }
+  ]
+}

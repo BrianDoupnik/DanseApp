@@ -1,0 +1,29 @@
+{
+  "scenarios": [
+    {
+      "id": "ballroom-breach",
+      "name": "Ballroom Breach",
+      "flavorText": "A scandal threatens the court. Use charm and grace to redirect attention before the hour is lost.",
+      "primaryObjective": "Collect victory points by controlling the social spotlight.",
+      "secondaryObjectives": "Gain bonus points for preserving influence over the most nobles.",
+      "specialRules": "NPC guards may interfere with dance patterns. Random events may force an unplanned duet.",
+      "endConditions": "Game ends after 6 rounds or when a faction reaches 12 victory points.",
+      "npcs": []
+    },
+    {
+      "id": "masquerade-mystery",
+      "name": "Masquerade Mystery",
+      "flavorText": "Behind the masks, secrets unfold. Unravel the intrigue while maintaining your facade.",
+      "primaryObjective": "Discover and expose hidden alliances to gain victory points.",
+      "secondaryObjectives": "Secure personal favors from revealed nobles.",
+      "specialRules": "Masks conceal identities until challenged. Dance cards may reveal or hide information.",
+      "endConditions": "Game ends after 8 rounds or when all masks are removed.",
+      "npcs": [
+        {
+          "name": "The Masked Inquisitor",
+          "description": "A mysterious figure probing for secrets, disrupting social harmony."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "actions": [
+    {
+      "id": "graceful-step",
+      "name": "Graceful Step",
+      "description": "A measured move that improves initiative order and grants a small point bonus.",
+      "source": "Default action"
+    }
+  ]
+}
