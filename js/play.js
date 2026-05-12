@@ -181,6 +181,7 @@ function renderGameplayScreen() {
   header.classList.add('gameplay-header');
 
   const changeRoundDiv = document.createElement('div');
+  changeRoundDiv.className = 'round-div';
 
   const roundBadge = createText('div', `Round ${state.round}`, 'round-pill');
   changeRoundDiv.appendChild(roundBadge);
@@ -445,9 +446,6 @@ function renderInitiativeTable() {
         state.initiative[index].value = state.initiative[index].value-1;
         state.initiative[index + 1].value = state.initiative[index + 1].value+1;
       }
-      else {
-        console.error(`Cannot decrease initiative for ${entry.name} because they are at position ${index} which is initiative value ${state.initiative[index].value} out of ${state.initiative.length}, so the expression returned false.`);
-      }
       renderGameplayScreen();
     });
     const incBtn = createButton('↑', () => {
@@ -455,9 +453,6 @@ function renderInitiativeTable() {
       if (index > 0) {
         state.initiative[index].value = state.initiative[index].value+1;
         state.initiative[index - 1].value = state.initiative[index - 1].value-1;
-      }
-      else {
-        console.error(`Cannot increase initiative for ${entry.name} because they are at position ${index} which is initiative value ${state.initiative[index].value} out of ${state.initiative.length}, so the expression returned false.`);
       }
       renderGameplayScreen();
     });

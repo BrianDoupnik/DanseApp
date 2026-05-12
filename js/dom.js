@@ -76,9 +76,6 @@ export function createTabs(tabNames, activeTab, onSelect) {
 
 // Show a fullscreen popup overlay for details and modal content.
 export function showPopup(title, contentElements) {
-
-  console.log('showPopup called with title:', title, 'and contentElements:', contentElements);
-
   const overlay = document.createElement('div');
   overlay.className = 'overlay';
   overlay.addEventListener('click', event => {
