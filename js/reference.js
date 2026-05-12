@@ -8,7 +8,7 @@ export function renderCharacterPopup(name) {
   const npc = state.selectedScenario?.npcs?.find(n => n.name === name);
   const content = [];
   if (character) {
-    content.push(createText('p', character.flavorText));
+    content.push(createText('p', character.flavorText, 'flavor-text'));
     content.push(createText('p', `Faction: ${character.faction}`));
     content.push(createText('p', `Grace: ${character.grace} • Charm: ${character.charm}`));
     if (character.abilities.length) {
@@ -22,7 +22,7 @@ export function renderCharacterPopup(name) {
     }
   } else if (npc) {
     content.push(createText('p', npc.description));
-    content.push(createText('p', 'NPC details are read-only and appear in initiative order automatically.'));
+    content.push(createText('p', 'NPC details are read-only and appear in initiative order automatically.', 'flavor-text'));
   } else {
     content.push(createText('p', 'Details not available.'));
   }
@@ -39,7 +39,7 @@ export function renderReferenceMode() {
 
   const intro = createCard([
     createText('h2', 'Reference Mode'),
-    createText('p', 'Use the tabs to navigate scenarios, characters, actions, and events without scrolling through one long page.'),
+    createText('p', 'Use the tabs to navigate scenarios, characters, actions, and events.'),
   ]);
   elements.appContent.appendChild(intro);
 
@@ -100,7 +100,7 @@ function renderScenarioReference(scenario) {
   node.className = 'card';
   node.append(
     createText('h4', scenario.name),
-    createText('p', scenario.flavorText),
+    createText('p', scenario.flavorText, 'flavor-text'),
     createText('p', `Primary objective: ${scenario.primaryObjective}`),
     createText('p', `Secondary objectives: ${scenario.secondaryObjectives}`),
     createText('p', `Special rules: ${scenario.specialRules}`),
@@ -122,7 +122,7 @@ function renderCharacterReference(character) {
   const abilities = character.abilities.map(id => state.data.abilities.find(a => a.id === id)).filter(Boolean);
   node.append(
     createText('h4', `${character.name} — ${character.faction}`),
-    createText('p', character.flavorText),
+    createText('p', character.flavorText, 'flavor-text'),
     createText('p', `Grace: ${character.grace} • Charm: ${character.charm}`),
     createText('p', `Abilities:`),
     ...abilities.map(ability => createText('p', `• ${ability.name}: ${ability.text}`))
@@ -148,7 +148,7 @@ function renderEventReference(event) {
   node.className = 'card';
   node.append(
     createText('h4', event.name),
-    createText('p', event.description),
+    createText('p', event.description, 'flavor-text'),
     createText('p', `Result: ${event.result}`),
   );
   return node;

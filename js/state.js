@@ -26,10 +26,12 @@ export const state = {
   gameplayTab: 'Tracker',
   generateEventOnAdvance: false,
   generateEvents: false,
+  randomizeInitiative: false,
   maxSelectedCharacters: 2,
 };
 
 export const elements = {
+  progressBar: document.getElementById("progressBar"),
   resetButton: document.getElementById('resetButton'),
   modeToggle: document.getElementById('modeToggle'),
   currentMode: document.getElementById('currentMode'),

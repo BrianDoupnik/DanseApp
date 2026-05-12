@@ -9,17 +9,27 @@ export function clearContent() {
 export function updateStatus(mode, selectedScenario, activeSubsection, round, maxSelectedCharacters) {
   const modeLabel = mode === 'reference' ? 'Reference Mode' : 'Play Mode';
   elements.currentMode.textContent = modeLabel;
+  
+  // TODO: Refactor this to use the elements from the state instead of getting it here
+  // for some reason using elements.progressBar from the state.js file is null here, so I am getting it here.
+  const progressBar = document.getElementById("progressBar");
+  elements.progressBar = progressBar;
 
   if (mode === 'play') {
+    elements.progressBar.style.opacity = 1;
     if (activeSubsection === 'gameplay') {
       elements.summaryText.textContent = `Scenario: ${selectedScenario.name} • Round: ${round}`;
+      elements.progressBar.style.width = "100%";
     } else if (selectedScenario) {
       elements.summaryText.textContent = `Scenario: ${selectedScenario.name} • Select ${maxSelectedCharacters} characters to begin.`;
+      elements.progressBar.style.width = "66%";
     } else {
       elements.summaryText.textContent = `Select a scenario and ${maxSelectedCharacters} characters to begin.`;
+      elements.progressBar.style.width = "33%";
     }
     elements.modeToggle.textContent = 'Switch to Reference';
   } else {
+    elements.progressBar.style.opacity = 0.25;
     elements.summaryText.textContent = 'Browse scenarios, characters, actions, and events freely.';
     elements.modeToggle.textContent = 'Switch to Play';
   }
@@ -66,6 +76,9 @@ export function createTabs(tabNames, activeTab, onSelect) {
 
 // Show a fullscreen popup overlay for details and modal content.
 export function showPopup(title, contentElements) {
+
+  console.log('showPopup called with title:', title, 'and contentElements:', contentElements);
+
   const overlay = document.createElement('div');
   overlay.className = 'overlay';
   overlay.addEventListener('click', event => {

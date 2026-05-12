@@ -1,5 +1,5 @@
 import { state, elements } from './state.js';
-import { createCard, createButton, createText, createTabs, clearContent, createStatRow, createDetailsCard, updateStatus } from './dom.js';
+import { createCard, createButton, createText, createTabs, clearContent, createStatRow, createDetailsCard, updateStatus, showPopup } from './dom.js';
 import { groupBy, generateRandomEvent } from './data.js';
 import { renderCharacterPopup, renderReferenceMode } from './reference.js';
 
@@ -30,7 +30,7 @@ export function renderPlayMode() {
 function renderScenarioSelection() {
   const intro = createCard([
     createText('h2', 'Choose a Scenario'),
-    createText('p', 'Select a scenario card to begin play. Each card includes the name, flavor text, and objective summary.'),
+    createText('p', 'Select a scenario card to begin play.'),
   ]);
   elements.appContent.appendChild(intro);
 
@@ -48,7 +48,7 @@ function renderScenarioSelection() {
   state.data.scenarios.forEach(scenario => {
     const card = createCard([
       createText('h3', scenario.name),
-      createText('p', scenario.flavorText),
+      createText('p', scenario.flavorText, 'flavor-text'),
       createText('p', `Primary objective: ${scenario.primaryObjective}`),
       createText('p', `Secondary objectives: ${scenario.secondaryObjectives}`),
       createButton('Select scenario', () => {
@@ -76,15 +76,18 @@ function renderCharacterSelection() {
   const intro = createCard([
     createText('h2', `Choose ${state.maxSelectedCharacters} Characters`),
     createText('p', `Select ${state.maxSelectedCharacters} nobles from one faction. Use the tabs to browse by house.`),
-    selectedFaction ? createText('p', `Selected faction: ${selectedFaction}`) : createText('p', `Selected: ${state.selectedCharacters.length}/${state.maxSelectedCharacters}`),
+    createText('p', `Selected: ${state.selectedCharacters.length}/${state.maxSelectedCharacters} ${selectedFaction ? `from ${selectedFaction}` : 'characters'}.`),
+    //selectedFaction ? createText('p', `Selected faction: ${selectedFaction}`) : "",
   ]);
   elements.appContent.appendChild(intro);
 
   const charactersByFaction = groupBy(state.data.characters, 'faction');
   const factions = Object.keys(charactersByFaction);
-  if (!state.characterSelectionTab || !factions.includes(state.characterSelectionTab)) {
+  //This is commented so you do not start with a faction selected.  
+  //Uncomment to start with the first faction selected
+  /*if (!state.characterSelectionTab || !factions.includes(state.characterSelectionTab)) {
     state.characterSelectionTab = factions[0] || null;
-  }
+  }*/
 
   const tabs = createTabs(factions, state.characterSelectionTab, tabName => {
     state.characterSelectionTab = tabName;
@@ -102,7 +105,7 @@ function renderCharacterSelection() {
     const disabled = !selected && (state.selectedCharacters.length >= state.maxSelectedCharacters || differentFaction);
     const card = createCard([
       createText('h4', character.name),
-      createText('p', character.flavorText),
+      createText('p', character.flavorText, 'flavor-text'),
       createText('p', `Grace: ${character.grace} • Charm: ${character.charm}`),
       createText('p', `Abilities:`),
       ...character.abilities.map(id => {
@@ -138,6 +141,7 @@ function renderCharacterSelection() {
           }
         });
       }
+      randomizeInitiativeOrder();
       renderPlayMode();
       window.scrollTo(0, 0);
     }));
@@ -172,51 +176,80 @@ function renderGameplayScreen() {
 
   const header = createCard([
     createText('h2', 'Gameplay Tracking'),
-    createText('p', state.selectedScenario.flavorText),
+    createText('p', state.selectedScenario.flavorText, 'flavor-text'),
   ]);
   header.classList.add('gameplay-header');
+
+  const changeRoundDiv = document.createElement('div');
+
   const roundBadge = createText('div', `Round ${state.round}`, 'round-pill');
-  const scenarioLabel = createText('p', `Scenario: ${state.selectedScenario.name}`);
-  header.appendChild(roundBadge);
-  header.appendChild(scenarioLabel);
-  elements.appContent.appendChild(header);
-
-  const primaryPanel = createCard([
-    createText('h3', 'Round and Score'),
-    ...createStatRow('Victory Points', state.victoryPoints, value => { state.victoryPoints = value; renderGameplayScreen(); }),
-    ...createStatRow('Draw Size', state.drawSize, value => { state.drawSize = value; renderGameplayScreen(); }, 9),
-    ...createStatRow('Hand Size', state.handSize, value => { state.handSize = value; renderGameplayScreen(); }, 9),
-    createText('p', 'Advance the round and optionally generate a new event.'),
-  ]);
-
-  const eventToggleLabel = document.createElement('label');
-  eventToggleLabel.className = 'checkbox-label';
-  const eventCheckbox = document.createElement('input');
-  eventCheckbox.type = 'checkbox';
-  eventCheckbox.checked = state.generateEventOnAdvance;
-  eventCheckbox.addEventListener('change', () => { state.generateEventOnAdvance = eventCheckbox.checked; });
-  eventToggleLabel.append(eventCheckbox, createText('span', 'Generate an event when advancing the round'));
-  primaryPanel.appendChild(eventToggleLabel);
-
-  primaryPanel.appendChild(createButton('Advance round', () => {
+  changeRoundDiv.appendChild(roundBadge);
+  changeRoundDiv.appendChild(createButton('Advance round', () => {
     if (state.generateEventOnAdvance) {
       generateRandomEvent();
+      showPopup(`New event: ${state.latestEvent.name}`, [createText('p', state.latestEvent.description, 'flavor-text'), createText('p', state.latestEvent.result)]);
     } else {
       state.latestEvent = null;
     }
+    if(state.randomizeInitiative) {
+      randomizeInitiativeOrder();
+    }
     state.round += 1;
-    renderGameplayScreen();
+    renderPlayMode();
   }));
-  primaryPanel.appendChild(createText('p', state.latestEvent ? `Event for this round: ${state.latestEvent.name} — ${state.latestEvent.result}` : 'No event generated yet.'));
+  changeRoundDiv.appendChild(createButton('Generate event', () => {
+    generateRandomEvent();
+    renderPlayMode();
+    showPopup(`New event: ${state.latestEvent.name}`, [createText('p', state.latestEvent.description, 'flavor-text'), createText('p', state.latestEvent.result)]);
+  }));
+  changeRoundDiv.appendChild(createButton('Options', () => {
+
+    const eventToggleLabel = document.createElement('label');
+    eventToggleLabel.className = 'checkbox-label';
+    const eventCheckbox = document.createElement('input');
+    eventCheckbox.type = 'checkbox';
+    eventCheckbox.checked = state.generateEventOnAdvance;
+    eventCheckbox.addEventListener('change', () => { state.generateEventOnAdvance = eventCheckbox.checked; state.generateEvents  = eventCheckbox.checked; });
+    eventToggleLabel.append(eventCheckbox, createText('span', 'Generate an event when advancing the round'));
+
+    const initiativeToggleLabel = document.createElement('label');
+    initiativeToggleLabel.className = 'checkbox-label';
+    const initiativeCheckbox = document.createElement('input');
+    initiativeCheckbox.type = 'checkbox';
+    initiativeCheckbox.checked = state.randomizeInitiative;
+    initiativeCheckbox.addEventListener('change', () => { state.randomizeInitiative = initiativeCheckbox.checked; });
+    initiativeToggleLabel.append(initiativeCheckbox, createText('span', 'Auto randomize initiative order each round'));
+
+    showPopup(`Options`, [eventToggleLabel, initiativeToggleLabel]);
+  }));
+
+  header.appendChild(changeRoundDiv);
+
+  header.appendChild(createText('p', state.latestEvent ? `Current event: ${state.latestEvent.name} — ${state.latestEvent.result}` : 'No event generated yet.'));
+
+  elements.appContent.appendChild(header);
+
+  const trackerContainer = document.createElement('div');
+  trackerContainer.className = 'card-list';
+
+  const primaryPanel = createCard([
+    createText('h3', 'Score'),
+    ...createStatRow('Victory Points', state.victoryPoints, value => { state.victoryPoints = value; renderGameplayScreen(); }),
+    ...createStatRow('Draw Size', state.drawSize, value => { state.drawSize = value; renderGameplayScreen(); }, 9),
+    ...createStatRow('Hand Size', state.handSize, value => { state.handSize = value; renderGameplayScreen(); }, 9),
+  ]);
 
   const gameTabs = createTabs(['Tracker', 'Details'], state.gameplayTab, tab => {
     state.gameplayTab = tab;
     renderGameplayScreen();
   });
 
+  trackerContainer.appendChild(primaryPanel);
+  trackerContainer.appendChild(createCard([createText('h3', 'Initiative Tracker'), ...renderInitiativeTable()]));
+
   const trackerSection = document.createElement('div');
   trackerSection.className = 'gameplay-section';
-  trackerSection.append(primaryPanel, createCard([createText('h3', 'Initiative Tracker'), ...renderInitiativeTable()]));
+  trackerSection.append(trackerContainer);
 
   const detailsSection = document.createElement('div');
   detailsSection.className = 'details-section';
@@ -224,7 +257,7 @@ function renderGameplayScreen() {
   detailsContainer.className = 'card-list';
   detailsContainer.append(
     createDetailsCard('Selected characters', renderSelectedCharacters()),
-    createDetailsCard('Available actions', renderAvailableActions()),
+    createDetailsCard('Actions', renderAvailableActions()),
     createDetailsCard('Scenario details', renderScenarioDetails()),
   );
   detailsSection.append(detailsContainer);
@@ -252,6 +285,11 @@ function renderScenarioDetails() {
         createText('h4', npc.name),
         createText('p', npc.description),
       ]);
+      npcCard.addEventListener('click', event => {
+      if (event.target.closest('button') || event.target.tagName === 'SELECT' || event.target.tagName === 'INPUT') return;
+      renderCharacterPopup(npc.name);
+      });
+      npcCard.classList.add('popup-card');
       box.appendChild(npcCard);
     });
   }
@@ -267,7 +305,7 @@ function renderSelectedCharacters() {
       createText('h4', `${character.name} — ${character.faction}`),
       createText('p', 'Tap to view details'),
     ]);
-    card.classList.add('clickable-character-card');
+    card.classList.add('popup-card');
     card.addEventListener('click', () => renderCharacterPopup(character.name));
     box.appendChild(card);
   });
@@ -292,7 +330,7 @@ function renderAvailableActions() {
   }
 
   if (genericActions.length) {
-    box.appendChild(createText('h3', 'Generic Actions'));
+    box.appendChild(createText('h3', 'Generic actions'));
     genericActions.forEach(action => {
       const actionCard = createCard([
         createText('h4', action.name),
@@ -304,7 +342,7 @@ function renderAvailableActions() {
   }
 
   if (characterAbilities.length) {
-    box.appendChild(createText('h3', 'Character Specific Actions'));
+    box.appendChild(createText('h3', 'Character specific actions'));
     characterAbilities.forEach(({ character, ability }) => {
       const abilityCard = createCard([
         createText('h4', ability.name),
@@ -318,8 +356,23 @@ function renderAvailableActions() {
   return box;
 }
 
+function randomizeInitiativeOrder() {
+    const n = state.initiative.length;
+    const values = Array.from({length: n}, (_, i) => i + 1);
+    const shuffled = values.sort(() => Math.random() - 0.5);
+    state.initiative.forEach((entry, index) => {
+      entry.value = shuffled[index];
+    });
+}
+
 // Render the initiative tracker table with value controls.
 function renderInitiativeTable() {
+        
+  const sortedInitiative = [...state.initiative].sort((a, b) => {
+    return b.value - a.value;
+  });
+  state.initiative = sortedInitiative;
+
   const wrapper = document.createElement('div');
   wrapper.className = 'card-list';
 
@@ -333,13 +386,8 @@ function renderInitiativeTable() {
   headerRow.appendChild(editToggle);
 
   const randomizeButton = createButton('Randomize', () => {
-    const n = state.initiative.length;
-    const values = Array.from({length: n}, (_, i) => i + 1);
-    const shuffled = values.sort(() => Math.random() - 0.5);
-    state.initiative.forEach((entry, index) => {
-      entry.value = shuffled[index];
-    });
-    renderGameplayScreen();
+    randomizeInitiativeOrder();
+    renderPlayMode();
   });
   headerRow.appendChild(randomizeButton);
   wrapper.appendChild(headerRow);
@@ -348,11 +396,6 @@ function renderInitiativeTable() {
     wrapper.appendChild(createCard([createText('p', 'No initiative entries yet. Enter edit mode to add characters.')]));
     return [wrapper];
   }
-
-  const sortedInitiative = [...state.initiative].sort((a, b) => {
-    if (b.value !== a.value) return b.value - a.value;
-    return a.name.localeCompare(b.name);
-  });
 
   if (state.initiativeEditMode) {
     const availableCharacters = [
@@ -367,7 +410,7 @@ function renderInitiativeTable() {
         availableCharacters.map(name => `<option value="${name}">${name}</option>`).join('');
       const addBtn = createButton('Add', () => {
         if (select.value) {
-          state.initiative.push({ name: select.value, value: 0 });
+          state.initiative.push({ name: select.value, value: state.initiative.length + 1});
           renderGameplayScreen();
         }
       });
@@ -380,33 +423,58 @@ function renderInitiativeTable() {
     }
   }
 
-  sortedInitiative.forEach(entry => {
-    const row = createCard([
-      createText('h4', entry.name),
-      createText('p', `Initiative: ${entry.value}`),
-    ]);
-    row.classList.add('initiative-row');
+  state.initiative.forEach(entry => {
+    const initiativeCardDiv = document.createElement('div');
+    initiativeCardDiv.style.display = 'flex';
+    initiativeCardDiv.style.justifyContent = 'space-between';
+    const leftDiv = document.createElement('div');
+    const rightDiv = document.createElement('div');
+    rightDiv.style.display = 'flex';
+
+    leftDiv.appendChild(createText('h4', entry.name)); 
+    leftDiv.appendChild(createText('p', `Initiative: ${entry.value}`));
+    
+    // they are sorted in reverse order, 
+    // with the highest initiative at the lowest index
+    // and the lowest initiatiave at the highest index
+    const valueControls = document.createElement('div');
+    valueControls.className = 'stat-controls';
+    const decBtn = createButton('↓', () => {
+      const index = state.initiative.findIndex(e => e.name === entry.name);
+      if (index < state.initiative.length - 1) {
+        state.initiative[index].value = state.initiative[index].value-1;
+        state.initiative[index + 1].value = state.initiative[index + 1].value+1;
+      }
+      else {
+        console.error(`Cannot decrease initiative for ${entry.name} because they are at position ${index} which is initiative value ${state.initiative[index].value} out of ${state.initiative.length}, so the expression returned false.`);
+      }
+      renderGameplayScreen();
+    });
+    const incBtn = createButton('↑', () => {
+      const index = state.initiative.findIndex(e => e.name === entry.name);
+      if (index > 0) {
+        state.initiative[index].value = state.initiative[index].value+1;
+        state.initiative[index - 1].value = state.initiative[index - 1].value-1;
+      }
+      else {
+        console.error(`Cannot increase initiative for ${entry.name} because they are at position ${index} which is initiative value ${state.initiative[index].value} out of ${state.initiative.length}, so the expression returned false.`);
+      }
+      renderGameplayScreen();
+    });
+    valueControls.append(decBtn, incBtn);
+    
+    rightDiv.appendChild(valueControls);
+
+    initiativeCardDiv.appendChild(leftDiv);
+    initiativeCardDiv.appendChild(rightDiv);
+
+    const row = createCard([initiativeCardDiv]);
+    row.classList.add('popup-card');
     row.addEventListener('click', event => {
       if (event.target.closest('button') || event.target.tagName === 'SELECT' || event.target.tagName === 'INPUT') return;
       renderCharacterPopup(entry.name);
     });
 
-    const valueControls = document.createElement('div');
-    valueControls.className = 'stat-controls';
-    const decBtn = createButton('-', () => {
-      const index = state.initiative.findIndex(e => e.name === entry.name);
-      state.initiative[index].value = Math.max(0, entry.value - 1);
-      renderGameplayScreen();
-    });
-    const valueDisplay = createText('span', entry.value.toString());
-    valueDisplay.className = 'stat-value';
-    const incBtn = createButton('+', () => {
-      const index = state.initiative.findIndex(e => e.name === entry.name);
-      state.initiative[index].value += 1;
-      renderGameplayScreen();
-    });
-    valueControls.append(decBtn, valueDisplay, incBtn);
-    row.appendChild(valueControls);
 
     if (state.initiativeEditMode) {
       const removeButton = createButton('Remove', () => {
