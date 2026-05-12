@@ -19,6 +19,15 @@
       "abilities": ["shadow-step"]
     },
     {
+      "id": "countess-velvet",
+      "name": "Countess Velvet",
+      "faction": "House Velours",
+      "flavorText": "A noble of refined elegance, known for her diplomatic finesse in the most delicate matters.",
+      "grace": 6,
+      "charm": 7,
+      "abilities": ["velvet-glove"]
+    },
+    {
       "id": "duchess-elegance",
       "name": "Duchess Elegance",
       "faction": "House Aurelian",

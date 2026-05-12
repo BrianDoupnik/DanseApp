@@ -5,6 +5,26 @@ import { renderReferenceMode } from './reference.js';
 import { updateStatus, clearContent, createCard, createText } from './dom.js';
 
 // Wire the global mode toggle button to swap between play and reference mode.
+function resetGame() {
+  state.mode = 'play';
+  state.selectedScenario = null;
+  state.selectedCharacters = [];
+  state.round = 1;
+  state.victoryPoints = 0;
+  state.drawSize = 1;
+  state.handSize = 1;
+  state.initiative = [];
+  state.activeSubsection = 'scenario-selection';
+  state.initiativeEditMode = false;
+  state.characterSelectionTab = null;
+  state.gameplayTab = 'Tracker';
+  state.generateEventOnAdvance = false;
+  state.generateEvents = false;
+  state.latestEvent = null;
+  renderPlayMode();
+  updateStatus(state.mode, state.selectedScenario, state.activeSubsection, state.round, state.maxSelectedCharacters);
+}
+
 function wireEvents() {
   elements.modeToggle.addEventListener('click', () => {
     elements.modeToggle.disabled = true;
@@ -15,8 +35,12 @@ function wireEvents() {
       state.mode = 'reference';
       renderReferenceMode();
     }
-    updateStatus(state.mode, state.selectedScenario, state.activeSubsection, state.round);
+    updateStatus(state.mode, state.selectedScenario, state.activeSubsection, state.round, state.maxSelectedCharacters);
     elements.modeToggle.disabled = false;
+  });
+
+  elements.resetButton.addEventListener('click', () => {
+    resetGame();
   });
 }
 
@@ -24,7 +48,7 @@ function wireEvents() {
 async function init() {
   await loadData();
   wireEvents();
-  updateStatus(state.mode, state.selectedScenario, state.activeSubsection, state.round);
+  updateStatus(state.mode, state.selectedScenario, state.activeSubsection, state.round, state.maxSelectedCharacters);
   renderPlayMode();
 }
 

@@ -91,7 +91,7 @@ export function renderReferenceMode() {
   contentCard.appendChild(content);
 
   elements.appContent.append(tabs, contentCard);
-  updateStatus(state.mode, state.selectedScenario, state.activeSubsection, state.round);
+  updateStatus(state.mode, state.selectedScenario, state.activeSubsection, state.round, state.maxSelectedCharacters);
 }
 
 // Render a single scenario card inside the reference view.

@@ -6,7 +6,7 @@ export function clearContent() {
 }
 
 // Update the status bar text based on the current state.
-export function updateStatus(mode, selectedScenario, activeSubsection, round) {
+export function updateStatus(mode, selectedScenario, activeSubsection, round, maxSelectedCharacters) {
   const modeLabel = mode === 'reference' ? 'Reference Mode' : 'Play Mode';
   elements.currentMode.textContent = modeLabel;
 
@@ -14,9 +14,9 @@ export function updateStatus(mode, selectedScenario, activeSubsection, round) {
     if (activeSubsection === 'gameplay') {
       elements.summaryText.textContent = `Scenario: ${selectedScenario.name} • Round: ${round}`;
     } else if (selectedScenario) {
-      elements.summaryText.textContent = `Scenario: ${selectedScenario.name} • Select two characters to begin.`;
+      elements.summaryText.textContent = `Scenario: ${selectedScenario.name} • Select ${maxSelectedCharacters} characters to begin.`;
     } else {
-      elements.summaryText.textContent = 'Select a scenario and two characters to begin.';
+      elements.summaryText.textContent = `Select a scenario and ${maxSelectedCharacters} characters to begin.`;
     }
     elements.modeToggle.textContent = 'Switch to Reference';
   } else {

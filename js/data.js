@@ -1,16 +1,22 @@
 import { state } from './state.js';
 
+function fetchNoCache(url) {
+  const separator = url.includes('?') ? '&' : '?';
+  const cacheBustedUrl = `${url}${separator}t=${Date.now()}`;
+  return fetch(cacheBustedUrl, { cache: 'no-store' });
+}
+
 // Load JSON game data and the markdown rules file into the shared state.
 export async function loadData() {
   const jsonPaths = ['data/scenarios.json', 'data/characters.json', 'data/actions.json', 'data/events.json', 'data/abilities.json'];
-  const jsonResponses = await Promise.all(jsonPaths.map(path => fetch(path).then(r => r.json())));
+  const jsonResponses = await Promise.all(jsonPaths.map(path => fetchNoCache(path).then(r => r.json())));
   state.data.scenarios = jsonResponses[0].scenarios || [];
   state.data.characters = jsonResponses[1].characters || [];
   state.data.actions = jsonResponses[2].actions || [];
   state.data.events = jsonResponses[3].events || [];
   state.data.abilities = jsonResponses[4].abilities || [];
 
-  const rulesText = await fetch('data/rules.md').then(r => r.text());
+  const rulesText = await fetchNoCache('data/rules.md').then(r => r.text());
   state.data.rules = rulesText;
 }
 

@@ -8,18 +8,22 @@ export function renderPlayMode() {
   clearContent();
   if (!state.selectedScenario) {
     renderScenarioSelection();
-    updateStatus(state.mode, state.selectedScenario, state.activeSubsection, state.round);
+    updateStatus(state.mode, state.selectedScenario, state.activeSubsection, state.round, state.maxSelectedCharacters);
     return;
   }
 
-  if (state.selectedCharacters.length < 2) {
+  if (state.selectedCharacters.length < state.maxSelectedCharacters) {
     renderCharacterSelection();
-    updateStatus(state.mode, state.selectedScenario, state.activeSubsection, state.round);
+    updateStatus(state.mode, state.selectedScenario, state.activeSubsection, state.round, state.maxSelectedCharacters);
     return;
   }
 
+  state.generateEventOnAdvance = state.generateEvents;
+  if (state.generateEvents) {
+    generateRandomEvent();
+  }
   renderGameplayScreen();
-  updateStatus(state.mode, state.selectedScenario, state.activeSubsection, state.round);
+  updateStatus(state.mode, state.selectedScenario, state.activeSubsection, state.round, state.maxSelectedCharacters);
 }
 
 // Render the scenario selection screen with scenario cards.
@@ -29,6 +33,15 @@ function renderScenarioSelection() {
     createText('p', 'Select a scenario card to begin play. Each card includes the name, flavor text, and objective summary.'),
   ]);
   elements.appContent.appendChild(intro);
+
+  const eventCheckboxLabel = document.createElement('label');
+  eventCheckboxLabel.className = 'checkbox-label';
+  const eventCheckbox = document.createElement('input');
+  eventCheckbox.type = 'checkbox';
+  eventCheckbox.checked = state.generateEvents;
+  eventCheckbox.addEventListener('change', () => { state.generateEvents = eventCheckbox.checked; });
+  eventCheckboxLabel.append(eventCheckbox, createText('span', 'Generate events during gameplay'));
+  elements.appContent.appendChild(createCard([eventCheckboxLabel]));
 
   const scenarioGrid = document.createElement('div');
   scenarioGrid.className = 'card-list';
@@ -59,10 +72,11 @@ function renderScenarioSelection() {
 // Render the character selection screen with faction tabs.
 function renderCharacterSelection() {
   clearContent();
+  const selectedFaction = state.selectedCharacters[0]?.faction || null;
   const intro = createCard([
-    createText('h2', 'Choose Two Characters'),
-    createText('p', 'Select two nobles from the available factions. Use the tabs to browse by house.'),
-    createText('p', `Selected: ${state.selectedCharacters.length}/2`),
+    createText('h2', `Choose ${state.maxSelectedCharacters} Characters`),
+    createText('p', `Select ${state.maxSelectedCharacters} nobles from one faction. Use the tabs to browse by house.`),
+    selectedFaction ? createText('p', `Selected faction: ${selectedFaction}`) : createText('p', `Selected: ${state.selectedCharacters.length}/${state.maxSelectedCharacters}`),
   ]);
   elements.appContent.appendChild(intro);
 
@@ -84,7 +98,8 @@ function renderCharacterSelection() {
 
   activeCharacters.forEach(character => {
     const selected = state.selectedCharacters.some(c => c.name === character.name);
-    const disabled = !selected && state.selectedCharacters.length >= 2;
+    const differentFaction = selectedFaction && character.faction !== selectedFaction;
+    const disabled = !selected && (state.selectedCharacters.length >= state.maxSelectedCharacters || differentFaction);
     const card = createCard([
       createText('h4', character.name),
       createText('p', character.flavorText),
@@ -109,7 +124,7 @@ function renderCharacterSelection() {
 
   elements.appContent.appendChild(list);
 
-  if (state.selectedCharacters.length === 2) {
+  if (state.selectedCharacters.length === state.maxSelectedCharacters) {
     elements.appContent.appendChild(createButton('Continue to gameplay', () => {
       state.selectedCharacters.forEach(character => {
         if (!state.initiative.some(entry => entry.name === character.name)) {
@@ -123,10 +138,19 @@ function renderCharacterSelection() {
           }
         });
       }
-      renderGameplayScreen();
+      renderPlayMode();
       window.scrollTo(0, 0);
     }));
   }
+
+  elements.appContent.appendChild(createButton('Back', () => {
+    state.selectedScenario = null;
+    state.selectedCharacters = [];
+    state.characterSelectionTab = null;
+    state.activeSubsection = 'scenario-selection';
+    renderPlayMode();
+    updateStatus(state.mode, state.selectedScenario, state.activeSubsection, state.round, state.maxSelectedCharacters);
+  }));
 }
 
 // Add or remove characters from the selection list.
@@ -136,7 +160,7 @@ function toggleCharacterSelection(character) {
     state.selectedCharacters.splice(index, 1);
     return;
   }
-  if (state.selectedCharacters.length < 2) {
+  if (state.selectedCharacters.length < state.maxSelectedCharacters) {
     state.selectedCharacters.push(character);
   }
 }
@@ -175,13 +199,15 @@ function renderGameplayScreen() {
   primaryPanel.appendChild(eventToggleLabel);
 
   primaryPanel.appendChild(createButton('Advance round', () => {
-    state.round += 1;
     if (state.generateEventOnAdvance) {
       generateRandomEvent();
+    } else {
+      state.latestEvent = null;
     }
+    state.round += 1;
     renderGameplayScreen();
   }));
-  primaryPanel.appendChild(createText('p', state.latestEvent ? `Last event: ${state.latestEvent.name} — ${state.latestEvent.result}` : 'No event generated yet.'));
+  primaryPanel.appendChild(createText('p', state.latestEvent ? `Event for this round: ${state.latestEvent.name} — ${state.latestEvent.result}` : 'No event generated yet.'));
 
   const gameTabs = createTabs(['Tracker', 'Details'], state.gameplayTab, tab => {
     state.gameplayTab = tab;
@@ -197,9 +223,9 @@ function renderGameplayScreen() {
   const detailsContainer = document.createElement('div');
   detailsContainer.className = 'card-list';
   detailsContainer.append(
-    createDetailsCard('Scenario details', renderScenarioDetails()),
     createDetailsCard('Selected characters', renderSelectedCharacters()),
     createDetailsCard('Available actions', renderAvailableActions()),
+    createDetailsCard('Scenario details', renderScenarioDetails()),
   );
   detailsSection.append(detailsContainer);
 
@@ -221,9 +247,12 @@ function renderScenarioDetails() {
     createText('p', `End conditions: ${state.selectedScenario.endConditions}`),
   );
   if (state.selectedScenario.npcs && state.selectedScenario.npcs.length > 0) {
-    box.append(createText('h4', 'NPCs in this scenario:'));
     state.selectedScenario.npcs.forEach(npc => {
-      box.append(createText('p', `${npc.name}: ${npc.description}`));
+      const npcCard = createCard([
+        createText('h4', npc.name),
+        createText('p', npc.description),
+      ]);
+      box.appendChild(npcCard);
     });
   }
   return box;
@@ -248,24 +277,44 @@ function renderSelectedCharacters() {
 // Render the available actions panel during gameplay.
 function renderAvailableActions() {
   const box = document.createElement('div');
-  state.data.actions.forEach(action => {
-    box.append(
-      createText('h4', action.name),
-      createText('p', action.description),
-      createText('p', `Source: ${action.source}`),
-    );
-  });
-  state.selectedCharacters.forEach(character => {
-    const actionAbilities = character.abilities
-      .map(id => state.data.abilities.find(a => a.id === id))
-      .filter(ability => ability && ability.isAction);
-    if (actionAbilities.length > 0) {
-      box.append(createText('h4', `${character.name} Special Actions:`));
-      actionAbilities.forEach(ability => {
-        box.append(createText('p', `${ability.name}: ${ability.text}`));
-      });
-    }
-  });
+  box.className = 'card-list';
+
+  const genericActions = state.data.actions || [];
+  const characterAbilities = state.selectedCharacters.flatMap(character =>
+    character.abilities
+      .map(id => ({ character, ability: state.data.abilities.find(a => a.id === id) }))
+      .filter(item => item.ability && item.ability.isAction)
+  );
+
+  if (!genericActions.length && !characterAbilities.length) {
+    box.appendChild(createCard([createText('p', 'No available actions or character abilities in the data file.')]));
+    return box;
+  }
+
+  if (genericActions.length) {
+    box.appendChild(createText('h3', 'Generic Actions'));
+    genericActions.forEach(action => {
+      const actionCard = createCard([
+        createText('h4', action.name),
+        createText('p', action.description),
+        createText('p', `Source: ${action.source || 'Generic'}`),
+      ]);
+      box.appendChild(actionCard);
+    });
+  }
+
+  if (characterAbilities.length) {
+    box.appendChild(createText('h3', 'Character Specific Actions'));
+    characterAbilities.forEach(({ character, ability }) => {
+      const abilityCard = createCard([
+        createText('h4', ability.name),
+        createText('p', ability.text),
+        createText('p', `Source: ${character.name}`),
+      ]);
+      box.appendChild(abilityCard);
+    });
+  }
+
   return box;
 }
 
@@ -274,18 +323,36 @@ function renderInitiativeTable() {
   const wrapper = document.createElement('div');
   wrapper.className = 'card-list';
 
-  const editToggle = createButton(state.initiativeEditMode ? 'Exit Edit Mode' : 'Edit Initiative', () => {
+  const headerRow = document.createElement('div');
+  headerRow.className = 'initiative-header';
+
+  const editToggle = createButton(state.initiativeEditMode ? 'Exit Edit Mode' : 'Edit Characters', () => {
     state.initiativeEditMode = !state.initiativeEditMode;
     renderGameplayScreen();
   });
-  wrapper.appendChild(createCard([createText('p', 'Toggle edit mode to add or remove entries.'), editToggle]));
+  headerRow.appendChild(editToggle);
+
+  const randomizeButton = createButton('Randomize', () => {
+    const n = state.initiative.length;
+    const values = Array.from({length: n}, (_, i) => i + 1);
+    const shuffled = values.sort(() => Math.random() - 0.5);
+    state.initiative.forEach((entry, index) => {
+      entry.value = shuffled[index];
+    });
+    renderGameplayScreen();
+  });
+  headerRow.appendChild(randomizeButton);
+  wrapper.appendChild(headerRow);
 
   if (!state.initiative.length) {
     wrapper.appendChild(createCard([createText('p', 'No initiative entries yet. Enter edit mode to add characters.')]));
     return [wrapper];
   }
 
-  const sortedInitiative = [...state.initiative].sort((a, b) => b.value - a.value);
+  const sortedInitiative = [...state.initiative].sort((a, b) => {
+    if (b.value !== a.value) return b.value - a.value;
+    return a.name.localeCompare(b.name);
+  });
 
   if (state.initiativeEditMode) {
     const availableCharacters = [

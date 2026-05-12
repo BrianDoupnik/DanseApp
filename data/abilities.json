@@ -23,6 +23,12 @@
       "name": "Intrigue Weave",
       "text": "Spin webs of deception, allowing you to redirect accusations to another noble.",
       "isAction": true
+    },
+    {
+      "id": "velvet-glove",
+      "name": "Velvet Glove",
+      "text": "Handle delicate situations with finesse, reducing the risk of scandal in social maneuvers.",
+      "isAction": false
     }
   ]
 }
