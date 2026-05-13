@@ -7,6 +7,7 @@ export const state = {
     actions: [],
     events: [],
     abilities: [],
+    tokens: [],
     rules: '',
   },
   selectedScenario: null,

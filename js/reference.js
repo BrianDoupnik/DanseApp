@@ -8,6 +8,7 @@ export function renderCharacterPopup(name) {
   const npc = state.selectedScenario?.npcs?.find(n => n.name === name);
   const content = [];
   if (character) {
+    content.push(createText('p', character.type, 'flavor-text'));
     content.push(createText('p', character.flavorText, 'flavor-text'));
     content.push(createText('p', `Faction: ${character.faction}`));
     content.push(createText('p', `Grace: ${character.grace} • Charm: ${character.charm}`));
@@ -21,6 +22,7 @@ export function renderCharacterPopup(name) {
       });
     }
   } else if (npc) {
+    content.push(createText('p', npc.type, 'flavor-text'));
     content.push(createText('p', npc.description));
     content.push(createText('p', 'NPC details are read-only and appear in initiative order automatically.', 'flavor-text'));
   } else {
@@ -43,10 +45,11 @@ export function renderReferenceMode() {
   ]);
   elements.appContent.appendChild(intro);
 
-  const tabs = createTabs(['Scenarios', 'Characters', 'Actions', 'Events', 'Rules'], state.referenceTab, tab => {
+  const tabs = createTabs(['Scenarios', 'Characters', 'Actions', 'Events', 'Tokens', 'Rules'], state.referenceTab, tab => {
     state.referenceTab = tab;
     renderReferenceMode();
   });
+  tabs.classList.add('sticky-tabs');
 
   if (state.referenceTab === 'Rules') {
     const rulesCard = createCard([
@@ -87,6 +90,8 @@ export function renderReferenceMode() {
     content.append(...state.data.actions.map(renderActionReference));
   } else if (state.referenceTab === 'Events') {
     content.append(...state.data.events.map(renderEventReference));
+  } else if (state.referenceTab === 'Tokens') {
+    content.append(...state.data.tokens.map(renderTokenReference));
   }
   contentCard.appendChild(content);
 
@@ -109,7 +114,7 @@ function renderScenarioReference(scenario) {
   if (scenario.npcs && scenario.npcs.length > 0) {
     node.append(createText('h5', 'NPCs:'));
     scenario.npcs.forEach(npc => {
-      node.append(createText('p', `${npc.name}: ${npc.description}`));
+      node.append(createText('p', `${npc.name}. ${npc.type}. ${npc.description}`));
     });
   }
   return node;
@@ -122,6 +127,7 @@ function renderCharacterReference(character) {
   const abilities = character.abilities.map(id => state.data.abilities.find(a => a.id === id)).filter(Boolean);
   node.append(
     createText('h4', `${character.name} — ${character.faction}`),
+    createText('p', character.type, 'flavor-text'),
     createText('p', character.flavorText, 'flavor-text'),
     createText('p', `Grace: ${character.grace} • Charm: ${character.charm}`),
     createText('p', `Abilities:`),
@@ -138,6 +144,18 @@ function renderActionReference(action) {
     createText('h4', action.name),
     createText('p', action.description),
     createText('p', `Source: ${action.source}`),
+  );
+  return node;
+}
+
+// Render a single token card inside the reference view.
+function renderTokenReference(token) {
+  const node = document.createElement('div');
+  node.className = 'card';
+  node.append(
+    createText('h4', token.name),
+    createText('p', token.text),
+    createText('p', `Type: ${token.type}`, 'flavor-text'),
   );
   return node;
 }
@@ -160,6 +178,7 @@ function renderNpcReference(npc, scenarioName) {
   node.className = 'card';
   node.append(
     createText('h4', `${npc.name} (${scenarioName})`),
+    createText('p', npc.type, 'flavor-text'),
     createText('p', npc.description),
   );
   return node;

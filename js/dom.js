@@ -56,6 +56,7 @@ export function createButton(text, onClick) {
 export function createText(tag, text, className) {
   const el = document.createElement(tag);
   el.textContent = text;
+  el.style.whiteSpace = 'pre-line';
   if (className) el.className = className;
   return el;
 }

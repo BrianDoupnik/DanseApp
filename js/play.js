@@ -105,6 +105,7 @@ function renderCharacterSelection() {
     const disabled = !selected && (state.selectedCharacters.length >= state.maxSelectedCharacters || differentFaction);
     const card = createCard([
       createText('h4', character.name),
+      createText('p', character.type, 'flavor-text'),
       createText('p', character.flavorText, 'flavor-text'),
       createText('p', `Grace: ${character.grace} • Charm: ${character.charm}`),
       createText('p', `Abilities:`),
@@ -174,8 +175,14 @@ function renderGameplayScreen() {
   clearContent();
   state.activeSubsection = 'gameplay';
 
+  const headerDiv = document.createElement('div');
+  headerDiv.style.display = 'flex';
+  headerDiv.appendChild(createText('h2', 'Gameplay Tracking'));
+  const roundBadge = createText('div', `Round ${state.round}`, 'round-pill');
+  headerDiv.appendChild(roundBadge);
+
   const header = createCard([
-    createText('h2', 'Gameplay Tracking'),
+    headerDiv,
     createText('p', state.selectedScenario.flavorText, 'flavor-text'),
   ]);
   header.classList.add('gameplay-header');
@@ -183,12 +190,10 @@ function renderGameplayScreen() {
   const changeRoundDiv = document.createElement('div');
   changeRoundDiv.className = 'round-div';
 
-  const roundBadge = createText('div', `Round ${state.round}`, 'round-pill');
-  changeRoundDiv.appendChild(roundBadge);
-  changeRoundDiv.appendChild(createButton('Advance round', () => {
+  changeRoundDiv.appendChild(createButton('Next round', () => {
     if (state.generateEventOnAdvance) {
       generateRandomEvent();
-      showPopup(`New event: ${state.latestEvent.name}`, [createText('p', state.latestEvent.description, 'flavor-text'), createText('p', state.latestEvent.result)]);
+      showPopup(`New event: ${state.latestEvent.name}`, [createText('p', state.latestEvent.description, 'flavor-text'), createText('p', state.latestEvent.id==="scenario-event" ? state.selectedScenario.specialRules : state.latestEvent.result)]);
     } else {
       state.latestEvent = null;
     }
@@ -201,7 +206,7 @@ function renderGameplayScreen() {
   changeRoundDiv.appendChild(createButton('Generate event', () => {
     generateRandomEvent();
     renderPlayMode();
-    showPopup(`New event: ${state.latestEvent.name}`, [createText('p', state.latestEvent.description, 'flavor-text'), createText('p', state.latestEvent.result)]);
+    showPopup(`New event: ${state.latestEvent.name}`, [createText('p', state.latestEvent.description, 'flavor-text'), createText('p', state.latestEvent.id==="scenario-event" ? state.selectedScenario.specialRules : state.latestEvent.result)]);
   }));
   changeRoundDiv.appendChild(createButton('Options', () => {
 
@@ -226,7 +231,7 @@ function renderGameplayScreen() {
 
   header.appendChild(changeRoundDiv);
 
-  header.appendChild(createText('p', state.latestEvent ? `Current event: ${state.latestEvent.name} — ${state.latestEvent.result}` : 'No event generated yet.'));
+  header.appendChild(createText('p', `Current special event: ${state.latestEvent ? (state.latestEvent.id==="scenario-event" ? state.selectedScenario.specialRules : state.latestEvent.result) : 'None'}`)); 
 
   elements.appContent.appendChild(header);
 
@@ -244,6 +249,7 @@ function renderGameplayScreen() {
     state.gameplayTab = tab;
     renderGameplayScreen();
   });
+  gameTabs.classList.add('sticky-tabs');
 
   trackerContainer.appendChild(primaryPanel);
   trackerContainer.appendChild(createCard([createText('h3', 'Initiative Tracker'), ...renderInitiativeTable()]));
@@ -335,9 +341,13 @@ function renderAvailableActions() {
     genericActions.forEach(action => {
       const actionCard = createCard([
         createText('h4', action.name),
-        createText('p', action.description),
-        createText('p', `Source: ${action.source || 'Generic'}`),
       ]);
+      actionCard.classList.add('popup-card');
+      actionCard.addEventListener('click', () => {
+        showPopup(action.name, [
+          createText('p', action.description)
+        ]);
+      });
       box.appendChild(actionCard);
     });
   }
@@ -347,9 +357,15 @@ function renderAvailableActions() {
     characterAbilities.forEach(({ character, ability }) => {
       const abilityCard = createCard([
         createText('h4', ability.name),
-        createText('p', ability.text),
         createText('p', `Source: ${character.name}`),
       ]);
+      abilityCard.classList.add('popup-card');
+      abilityCard.addEventListener('click', () => {
+        showPopup(ability.name, [
+          createText('p', ability.text),
+          createText('p', `Source: ${character.name}`)
+        ]);
+      });
       box.appendChild(abilityCard);
     });
   }
@@ -432,8 +448,12 @@ function renderInitiativeTable() {
     const rightDiv = document.createElement('div');
     rightDiv.style.display = 'flex';
 
+    const character = state.data.characters.find(c => c.name === entry.name);
+    const npc = state.selectedScenario?.npcs?.find(n => n.name === entry.name);
+    const isFollower = character?.type === 'Follower' || npc?.type === 'Follower';
+
     leftDiv.appendChild(createText('h4', entry.name)); 
-    leftDiv.appendChild(createText('p', `Initiative: ${entry.value}`));
+    leftDiv.appendChild(createText('p', `Initiative: ${entry.value}${isFollower ? ' (Follower)' : ''}`));
     
     // they are sorted in reverse order, 
     // with the highest initiative at the lowest index

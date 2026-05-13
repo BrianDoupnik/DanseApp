@@ -1,6 +1,22 @@
 {
   "scenarios": [
     {
+      "id": "grand-cotillion",
+      "name": "The Grand Cotillion",
+      "flavorText": "A famous heiress has just come of age; suitors from every family of note have gathered to win her favor. Can you outmanuever your rivals to secure the debutante's hand?",
+      "primaryObjective": "Players gain one victory point for every round they dance with the debutante",
+      "secondaryObjectives": "Key tokens represent knowledge of the debutante's preferences. While adjacent to the debutante, spend 1 action to gain a key token. Each key token is worth 1 victory point at the end of the game.",
+      "specialRules": "Grand Cotillion Special Event: As an action, nobles adjacent to her may become the debutante's partner this round.",
+      "endConditions": "Game ends after 12 rounds.",
+      "npcs": [
+        {
+          "name": "The Debutante",
+          "type": "Follower",
+          "description": "The debutante starts in one of the middle squares of the map.  She waits to be invited to dance.  If she is ever unpartnered, she moves directly toward the center of the map."
+        }
+      ]
+    },
+    {
       "id": "ballroom-breach",
       "name": "Ballroom Breach",
       "flavorText": "A scandal threatens the court. Use charm and grace to redirect attention before the hour is lost.",
@@ -21,6 +37,7 @@
       "npcs": [
         {
           "name": "The Masked Inquisitor",
+          "type": "Leader",
           "description": "A mysterious figure probing for secrets, disrupting social harmony."
         }
       ]

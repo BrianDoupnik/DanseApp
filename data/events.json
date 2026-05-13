@@ -1,16 +1,22 @@
 {
   "events": [
     {
-      "id": "unexpected-guest",
-      "name": "Unexpected Guest",
-      "description": "A visiting lord enters the ballroom and shifts the attention of the crowd.",
-      "result": "Each faction adjusts hand size by 1. Resolve the effect according to scenario rules."
+      "id": "crowd-swells",
+      "name": "The Crowd Swells",
+      "description": "The ballroom seems to grow smaller as the crowd thickens around the dance floor.  Whispers of conversation are easily caught.",
+      "result": "The \"Read the room\" action automatically succeeds this round."
     },
     {
-      "id": "rival-entrance",
-      "name": "Rival Entrance",
-      "description": "A rival noble arrives with a dramatic flourish, drawing whispers and attention.",
-      "result": "All players must discard one card unless they spend a charm token to avoid the distraction."
+      "id": "unfortunate-joke",
+      "name": "An Unfortunate Joke",
+      "description": "A humorous quip gets misinterpreted, and suspicion briefly sets in.",
+      "result": "All characters must succeed a charm test when \"Probing secrets\" or \"Telling tales\" this round, or gain a chatter token."
+    },
+    {
+      "id": "scenario-event",
+      "name": "Scenario special event",
+      "description": "An unexpected occurance... can you make of it an opportunity?",
+      "result": "Effects depend on the scenario. Follow the instructions provided in the scenario's special rules section."
     }
   ]
 }

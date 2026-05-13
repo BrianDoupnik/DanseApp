@@ -1,9 +1,21 @@
 {
   "actions": [
     {
-      "id": "graceful-step",
-      "name": "Graceful Step",
-      "description": "A measured move that improves initiative order and grants a small point bonus.",
+      "id": "move",
+      "name": "Move",
+      "description": "If partnered, characters move as a pair, following the pattern of the dance. If unpartnered, characters move independently.",
+      "source": "Default action"
+    },
+    {
+      "id": "probe-secret",
+      "name": "Probe Secret",
+      "description": "Gain a token from the supply, based on the following rules:\nAdjacent to an ally: gain Wits or Instructions.\nAdjacent to an enemy: gain Gossip or Blackmail.\nAdjacent to an NPC: gain a rumor.",
+      "source": "Default action"
+    },
+    {
+      "id": "tell-tales",
+      "name": "Tell Tales",
+      "description": "If adjacent to an enemy, they gain a chatter token, or a misinformation token if they're next to another of your allies.",
       "source": "Default action"
     }
   ]
