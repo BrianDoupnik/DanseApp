@@ -41,7 +41,18 @@ function renderScenarioSelection() {
   eventCheckbox.checked = state.generateEvents;
   eventCheckbox.addEventListener('change', () => { state.generateEvents = eventCheckbox.checked; });
   eventCheckboxLabel.append(eventCheckbox, createText('span', 'Generate events during gameplay'));
-  elements.appContent.appendChild(createCard([eventCheckboxLabel]));
+
+  const npcDancersLabel = document.createElement('label');
+  npcDancersLabel.className = 'checkbox-label';
+  const npcDancersCheckbox = document.createElement('input');
+  npcDancersCheckbox.type = 'checkbox';
+  npcDancersCheckbox.checked = state.generateNpcDancers;
+  npcDancersCheckbox.addEventListener('change', () => { state.generateNpcDancers = npcDancersCheckbox.checked; });
+  npcDancersLabel.append(npcDancersCheckbox, createText('span', 'Generate 4 NPCs in the initiative tracker'));
+  
+  const settingsCard = createCard([eventCheckboxLabel, npcDancersLabel]);
+  settingsCard.style.display = 'block';
+  elements.appContent.appendChild(settingsCard);
 
   const scenarioGrid = document.createElement('div');
   scenarioGrid.className = 'card-list';
@@ -141,6 +152,12 @@ function renderCharacterSelection() {
             state.initiative.push({ name: npc.name, value: 0 });
           }
         });
+      }
+      if (state.generateNpcDancers) {
+        state.initiative.push({ name: `Friendly Leader`, value: 0 });
+        state.initiative.push({ name: `Friendly Follower`, value: 0 });
+        state.initiative.push({ name: `Enemy Leader`, value: 0 });
+        state.initiative.push({ name: `Enemy Follower`, value: 0 });
       }
       randomizeInitiativeOrder();
       renderPlayMode();
@@ -450,10 +467,11 @@ function renderInitiativeTable() {
 
     const character = state.data.characters.find(c => c.name === entry.name);
     const npc = state.selectedScenario?.npcs?.find(n => n.name === entry.name);
-    const isFollower = character?.type === 'Follower' || npc?.type === 'Follower';
+    const isFollower = character?.type === 'Follower' || npc?.type === 'Follower' || entry.name.toLowerCase().includes('follower');
+    const isMyCharacter = state.selectedCharacters.some(c => c.name === entry.name);
 
-    leftDiv.appendChild(createText('h4', entry.name)); 
-    leftDiv.appendChild(createText('p', `Initiative: ${entry.value}${isFollower ? ' (Follower)' : ''}`));
+    leftDiv.appendChild(createText('h4', entry.name, isMyCharacter ? 'highlighted-text' : '')); 
+    leftDiv.appendChild(createText('p', `Initiative: ${entry.value}`, isFollower ? 'flavor-text' : ''));
     
     // they are sorted in reverse order, 
     // with the highest initiative at the lowest index

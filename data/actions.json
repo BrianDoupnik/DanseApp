@@ -9,13 +9,13 @@
     {
       "id": "probe-secret",
       "name": "Probe Secret",
-      "description": "Gain a token from the supply, based on the following rules:\nAdjacent to an ally: gain Wits or Instructions.\nAdjacent to an enemy: gain Gossip or Blackmail.\nAdjacent to an NPC: gain a rumor.",
+      "description": "Gain a token from the supply, based on the following rules:\n•Adjacent to an ally: gain Wits or Instructions.\n•Adjacent to an enemy: gain Gossip or Blackmail.\n•Adjacent to an NPC: gain a rumor.",
       "source": "Default action"
     },
     {
       "id": "tell-tales",
       "name": "Tell Tales",
-      "description": "If adjacent to an enemy, they gain a chatter token, or a misinformation token if they're next to another of your allies.",
+      "description": "If adjacent to an enemy, they gain Chatter, or Misinformation if they're next to another of your allies.",
       "source": "Default action"
     }
   ]

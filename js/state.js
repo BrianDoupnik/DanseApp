@@ -27,6 +27,7 @@ export const state = {
   gameplayTab: 'Tracker',
   generateEventOnAdvance: false,
   generateEvents: false,
+  generateNpcDancers: false,
   randomizeInitiative: false,
   maxSelectedCharacters: 2,
 };

@@ -29,6 +29,10 @@ body {
   color: var(--muted);
 }
 
+.highlighted-text {
+  color: var(--accent);
+}
+
 button,
 input,
 textarea,
