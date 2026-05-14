@@ -17,6 +17,30 @@
       "name": "Tell Tales",
       "description": "If adjacent to an enemy, they gain Chatter, or Misinformation if they're next to another of your allies.",
       "source": "Default action"
+    },
+    {
+      "id": "read-room",
+      "name": "Read the Room",
+      "description": "Speak to the crowd -- test Charm to increase draw size by 1.",
+      "source": "Default action"
+    },
+    {
+      "id": "organize-threads",
+      "name": "Organize Threads",
+      "description": "Synthesize the information you've learned; test Wits to increase hand size by 1.",
+      "source": "Default action"
+    },
+    {
+      "id": "give-item",
+      "name": "Give Item",
+      "description": "Transfer an item from your inventory to an adjacent ally.",
+      "source": "Default action"
+    },
+    {
+      "id": "take-item",
+      "name": "Take Item",
+      "description": "Test Grace to transfer an item from another character's inventory to this character's inventory.",
+      "source": "Default action"
     }
   ]
 }

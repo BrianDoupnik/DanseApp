@@ -7,12 +7,12 @@ This workspace now contains a static web application intended as a companion tra
 - `index.html`: main static web page for the app.
 - `styles.css`: theme and layout styling.
 - `package.json`: enables ES module loading for the new JS module structure.
+- `js/main.js`: app bootstrap and global event wiring.
 - `js/state.js`: shared application state and DOM references.
 - `js/data.js`: data loading and helper utilities.
 - `js/dom.js`: DOM creation helpers, markdown rendering, and status updates.
 - `js/reference.js`: reference mode rendering and popups.
 - `js/play.js`: play mode rendering, scenario/character selection, gameplay tracking, and initiative management.
-- `js/main.js`: app bootstrap and global event wiring.
 - `data/scenarios.json`: scenario data store.
 - `data/characters.json`: character data store.
 - `data/actions.json`: action definitions store.
@@ -24,6 +24,7 @@ This workspace now contains a static web application intended as a companion tra
   1. Scenario selection
   2. Character selection from a single faction
   3. Gameplay tracking with round number, victory points, draw size, hand size, event generation, and initiative tracking
+- Random events are generated only by explicit gameplay actions: advance round or click Generate Event.
 - `Reference Mode` displays the current scenario, character, action, and event data in a free-browsing wiki-style layout.
 - The app loads JSON from the `data/` folder and does not store any persistent data.
 - The app forces a fresh data fetch on startup to avoid stale browser cache issues.

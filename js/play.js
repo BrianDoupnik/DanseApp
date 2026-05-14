@@ -19,9 +19,8 @@ export function renderPlayMode() {
   }
 
   state.generateEventOnAdvance = state.generateEvents;
-  if (state.generateEvents) {
-    generateRandomEvent();
-  }
+  // Do not generate a random event on every render.
+  // Events are generated only when advancing the round or when the Generate Event button is clicked.
   renderGameplayScreen();
   updateStatus(state.mode, state.selectedScenario, state.activeSubsection, state.round, state.maxSelectedCharacters);
 }
@@ -42,15 +41,15 @@ function renderScenarioSelection() {
   eventCheckbox.addEventListener('change', () => { state.generateEvents = eventCheckbox.checked; });
   eventCheckboxLabel.append(eventCheckbox, createText('span', 'Generate events during gameplay'));
 
-  const npcDancersLabel = document.createElement('label');
-  npcDancersLabel.className = 'checkbox-label';
-  const npcDancersCheckbox = document.createElement('input');
-  npcDancersCheckbox.type = 'checkbox';
-  npcDancersCheckbox.checked = state.generateNpcDancers;
-  npcDancersCheckbox.addEventListener('change', () => { state.generateNpcDancers = npcDancersCheckbox.checked; });
-  npcDancersLabel.append(npcDancersCheckbox, createText('span', 'Generate 4 NPCs in the initiative tracker'));
+  const retinueLabel = document.createElement('label');
+  retinueLabel.className = 'checkbox-label';
+  const retinueCheckbox = document.createElement('input');
+  retinueCheckbox.type = 'checkbox';
+  retinueCheckbox.checked = state.generateRetinues;
+  retinueCheckbox.addEventListener('change', () => { state.generateRetinues = retinueCheckbox.checked; });
+  retinueLabel.append(retinueCheckbox, createText('span', 'Generate 2 Retinues in the initiative tracker'));
   
-  const settingsCard = createCard([eventCheckboxLabel, npcDancersLabel]);
+  const settingsCard = createCard([eventCheckboxLabel, retinueLabel]);
   settingsCard.style.display = 'block';
   elements.appContent.appendChild(settingsCard);
 
@@ -106,6 +105,14 @@ function renderCharacterSelection() {
   });
   elements.appContent.appendChild(tabs);
 
+  console.log(state.characterSelectionTab);
+  const houseFlavorText = state.data.factions.find(f => f.name === state.characterSelectionTab)?.flavorText;
+  console.log("House flavor text: ", houseFlavorText);
+  if (houseFlavorText) {
+    const flavorText = createText('p', houseFlavorText, 'flavor-text');
+    elements.appContent.appendChild(flavorText);
+  }
+
   const activeCharacters = charactersByFaction[state.characterSelectionTab] || [];
   const list = document.createElement('div');
   list.className = 'card-list';
@@ -141,11 +148,14 @@ function renderCharacterSelection() {
 
   if (state.selectedCharacters.length === state.maxSelectedCharacters) {
     elements.appContent.appendChild(createButton('Continue to gameplay', () => {
-      state.selectedCharacters.forEach(character => {
+      state.initiative.push({ name: `Friendly Agents`, value: 0 });
+      state.initiative.push({ name: `Enemy Agents`, value: 0 });
+      /*state.selectedCharacters.forEach(character => {
         if (!state.initiative.some(entry => entry.name === character.name)) {
           state.initiative.push({ name: character.name, value: 0 });
         }
-      });
+        
+      });*/
       if (state.selectedScenario.npcs) {
         state.selectedScenario.npcs.forEach(npc => {
           if (!state.initiative.some(entry => entry.name === npc.name)) {
@@ -153,11 +163,11 @@ function renderCharacterSelection() {
           }
         });
       }
-      if (state.generateNpcDancers) {
-        state.initiative.push({ name: `Friendly Leader`, value: 0 });
-        state.initiative.push({ name: `Friendly Follower`, value: 0 });
-        state.initiative.push({ name: `Enemy Leader`, value: 0 });
-        state.initiative.push({ name: `Enemy Follower`, value: 0 });
+      if (state.generateRetinues) {
+        state.initiative.push({ name: `Friendly Retinue`, value: 0 });
+        //state.initiative.push({ name: `Friendly Follower`, value: 0 });
+        state.initiative.push({ name: `Enemy Retinue`, value: 0 });
+        //state.initiative.push({ name: `Enemy Follower`, value: 0 });
       }
       randomizeInitiativeOrder();
       renderPlayMode();
@@ -210,7 +220,7 @@ function renderGameplayScreen() {
   changeRoundDiv.appendChild(createButton('Next round', () => {
     if (state.generateEventOnAdvance) {
       generateRandomEvent();
-      showPopup(`New event: ${state.latestEvent.name}`, [createText('p', state.latestEvent.description, 'flavor-text'), createText('p', state.latestEvent.id==="scenario-event" ? state.selectedScenario.specialRules : state.latestEvent.result)]);
+      showPopup(`New event: ${state.latestEvent.name}`, [createText('p', state.latestEvent.description, 'flavor-text'), createText('p', state.latestEvent.id==="scenario-event" ? state.selectedScenario.scenarioEvent : state.latestEvent.result)]);
     } else {
       state.latestEvent = null;
     }
@@ -223,7 +233,7 @@ function renderGameplayScreen() {
   changeRoundDiv.appendChild(createButton('Generate event', () => {
     generateRandomEvent();
     renderPlayMode();
-    showPopup(`New event: ${state.latestEvent.name}`, [createText('p', state.latestEvent.description, 'flavor-text'), createText('p', state.latestEvent.id==="scenario-event" ? state.selectedScenario.specialRules : state.latestEvent.result)]);
+    showPopup(`New event: ${state.latestEvent.name}`, [createText('p', state.latestEvent.description, 'flavor-text'), createText('p', state.latestEvent.id==="scenario-event" ? state.selectedScenario.scenarioEvent : state.latestEvent.result)]);
   }));
   changeRoundDiv.appendChild(createButton('Options', () => {
 
@@ -248,7 +258,7 @@ function renderGameplayScreen() {
 
   header.appendChild(changeRoundDiv);
 
-  header.appendChild(createText('p', `Current special event: ${state.latestEvent ? (state.latestEvent.id==="scenario-event" ? state.selectedScenario.specialRules : state.latestEvent.result) : 'None'}`)); 
+  header.appendChild(createText('p', `Current special event: ${state.latestEvent ? (state.latestEvent.id==="scenario-event" ? state.selectedScenario.scenarioEvent : state.latestEvent.result) : 'None'}`)); 
 
   elements.appContent.appendChild(header);
 
@@ -258,8 +268,8 @@ function renderGameplayScreen() {
   const primaryPanel = createCard([
     createText('h3', 'Score'),
     ...createStatRow('Victory Points', state.victoryPoints, value => { state.victoryPoints = value; renderGameplayScreen(); }),
-    ...createStatRow('Draw Size', state.drawSize, value => { state.drawSize = value; renderGameplayScreen(); }, 9),
-    ...createStatRow('Hand Size', state.handSize, value => { state.handSize = value; renderGameplayScreen(); }, 9),
+    ...createStatRow('Draw Size', state.drawSize, value => { state.drawSize = value; renderGameplayScreen(); }, 9, 1),
+    ...createStatRow('Hand Size', state.handSize, value => { state.handSize = value; renderGameplayScreen(); }, 9, 1),
   ]);
 
   const gameTabs = createTabs(['Tracker', 'Details'], state.gameplayTab, tab => {
@@ -301,6 +311,7 @@ function renderScenarioDetails() {
     createText('p', `Primary objective: ${state.selectedScenario.primaryObjective}`),
     createText('p', `Secondary objectives: ${state.selectedScenario.secondaryObjectives}`),
     createText('p', `Special rules: ${state.selectedScenario.specialRules}`),
+    createText('p', `Scenario event: ${state.selectedScenario.scenarioEvent}`),
     createText('p', `End conditions: ${state.selectedScenario.endConditions}`),
   );
   if (state.selectedScenario.npcs && state.selectedScenario.npcs.length > 0) {
@@ -413,11 +424,11 @@ function renderInitiativeTable() {
   const headerRow = document.createElement('div');
   headerRow.className = 'initiative-header';
 
-  const editToggle = createButton(state.initiativeEditMode ? 'Exit Edit Mode' : 'Edit Characters', () => {
+  /*const editToggle = createButton(state.initiativeEditMode ? 'Exit Edit Mode' : 'Edit Characters', () => {
     state.initiativeEditMode = !state.initiativeEditMode;
     renderGameplayScreen();
   });
-  headerRow.appendChild(editToggle);
+  headerRow.appendChild(editToggle);*/
 
   const randomizeButton = createButton('Randomize', () => {
     randomizeInitiativeOrder();
@@ -427,17 +438,18 @@ function renderInitiativeTable() {
   wrapper.appendChild(headerRow);
 
   if (!state.initiative.length) {
-    wrapper.appendChild(createCard([createText('p', 'No initiative entries yet. Enter edit mode to add characters.')]));
+    wrapper.appendChild(createCard([createText('p', 'No initiative entries.')]));
     return [wrapper];
   }
 
-  if (state.initiativeEditMode) {
+  //if (state.initiativeEditMode) {
+    /*
     const availableCharacters = [
       ...state.data.characters.map(c => c.name),
       ...(state.selectedScenario?.npcs?.map(n => n.name) || [])
     ].filter(name => !state.initiative.some(entry => entry.name === name));
-
-    if (availableCharacters.length > 0) {
+    */
+    /*if (availableCharacters.length > 0) {
       const select = document.createElement('select');
       select.className = 'custom-select';
       select.innerHTML = '<option value="">Select character to add...</option>' +
@@ -454,8 +466,24 @@ function renderInitiativeTable() {
       const editCard = createCard([createText('p', 'Add a character to initiative:'), addControls]);
       editCard.classList.add('initiative-edit-card');
       wrapper.appendChild(editCard);
-    }
-  }
+    }*/
+    /*const select = document.createElement('select');
+    select.className = 'custom-select';
+    select.innerHTML = '<option value="">Name...</option>';// +
+        //availableCharacters.map(name => `<option value="${name}">${name}</option>`).join('');
+    const addBtn = createButton('Add', () => {
+      if (select.value) {
+        state.initiative.push({ name: select.value, value: state.initiative.length + 1});
+        renderGameplayScreen();
+      }
+    });
+    const addControls = document.createElement('div');
+    addControls.className = 'action-row';
+    addControls.append(select, addBtn);
+    const editCard = createCard([createText('p', 'Add a character to initiative:'), addControls]);
+    editCard.classList.add('initiative-edit-card');
+    wrapper.appendChild(editCard);*/
+  //}
 
   state.initiative.forEach(entry => {
     const initiativeCardDiv = document.createElement('div');
@@ -465,13 +493,17 @@ function renderInitiativeTable() {
     const rightDiv = document.createElement('div');
     rightDiv.style.display = 'flex';
 
-    const character = state.data.characters.find(c => c.name === entry.name);
+    /*const character = state.data.characters.find(c => c.name === entry.name);
     const npc = state.selectedScenario?.npcs?.find(n => n.name === entry.name);
-    const isFollower = character?.type === 'Follower' || npc?.type === 'Follower' || entry.name.toLowerCase().includes('follower');
-    const isMyCharacter = state.selectedCharacters.some(c => c.name === entry.name);
+    const isFollower = character?.type === 'Follower' || npc?.type === 'Follower' || entry.name.toLowerCase().includes('follower');*/
+    //const areMyAgents = state.selectedCharacters.some(c => c.name === entry.name);
+    
+    const areMyAgents = entry.name === 'Friendly Agents';
+    const isNPC = state.selectedScenario?.npcs?.some(n => n.name === entry.name);
+    const isFollower = false;
 
-    leftDiv.appendChild(createText('h4', entry.name, isMyCharacter ? 'highlighted-text' : '')); 
-    leftDiv.appendChild(createText('p', `Initiative: ${entry.value}`, isFollower ? 'flavor-text' : ''));
+    leftDiv.appendChild(createText('h4', entry.name, areMyAgents || isNPC ? 'highlighted-text' : '')); 
+    leftDiv.appendChild(createText('p', `Initiative: ${entry.value}`));//, isNPC ? 'flavor-text' : ''));
     
     // they are sorted in reverse order, 
     // with the highest initiative at the lowest index
@@ -494,7 +526,7 @@ function renderInitiativeTable() {
       }
       renderGameplayScreen();
     });
-    valueControls.append(decBtn, incBtn);
+    valueControls.append(incBtn, decBtn);
     
     rightDiv.appendChild(valueControls);
 
@@ -502,13 +534,14 @@ function renderInitiativeTable() {
     initiativeCardDiv.appendChild(rightDiv);
 
     const row = createCard([initiativeCardDiv]);
-    row.classList.add('popup-card');
-    row.addEventListener('click', event => {
-      if (event.target.closest('button') || event.target.tagName === 'SELECT' || event.target.tagName === 'INPUT') return;
-      renderCharacterPopup(entry.name);
-    });
-
-
+    if (areMyAgents || isNPC) {
+      row.classList.add('popup-card');
+      row.addEventListener('click', event => {
+        if (event.target.closest('button') || event.target.tagName === 'SELECT' || event.target.tagName === 'INPUT') return;
+        console.log(entry.name);
+        renderCharacterPopup(entry.name);
+      });
+    }
     if (state.initiativeEditMode) {
       const removeButton = createButton('Remove', () => {
         const index = state.initiative.findIndex(e => e.name === entry.name);

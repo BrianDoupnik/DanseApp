@@ -21,7 +21,7 @@ function resetGame() {
   state.generateEventOnAdvance = false;
   state.generateEvents = false;
   state.latestEvent = null;
-  state.generateNpcDancers = false;
+  state.generateRetinues = false;
   state.randomizeInitiative = false;
   renderPlayMode();
   updateStatus(state.mode, state.selectedScenario, state.activeSubsection, state.round, state.maxSelectedCharacters);

@@ -4,6 +4,22 @@ import { groupBy } from './data.js';
 
 // Show the details popup for a named character or NPC.
 export function renderCharacterPopup(name) {
+  console.log(name);
+  console.log(name === "Friendly Agents");
+  if(name === "Friendly Agents") {
+    const content = [];
+    state.selectedCharacters.forEach(character => {
+      content.push(createCard([
+        createText('h4', character.name),
+        createText('p', character.type, 'flavor-text'),
+        createText('p', `Grace: ${character.grace} • Charm: ${character.charm}`),
+        createText('p', `Abilities: ${character.abilities.map(ability => state.data.abilities.find(a => a.id === ability)?.name || ability).join(', ')}`),
+      ]));
+    });
+    showPopup(name, content, true);
+    return;
+  }
+
   const character = state.data.characters.find(c => c.name === name);
   const npc = state.selectedScenario?.npcs?.find(n => n.name === name);
   const content = [];
@@ -80,6 +96,11 @@ export function renderReferenceMode() {
     const charactersSection = document.createElement('div');
     charactersSection.className = 'reference-characters-section';
     charactersSection.appendChild(houseTabs);
+    const houseFlavorText = state.data.factions.find(f => f.name === state.referenceCharacterHouseTab)?.flavorText;
+    if (houseFlavorText) {
+      const flavorText = createText('p', houseFlavorText, 'flavor-text');
+      charactersSection.appendChild(flavorText);
+    }
     const characterList = document.createElement('div');
     characterList.className = 'card-list';
     const activeCharacters = charactersByFaction[state.referenceCharacterHouseTab] || [];
@@ -109,6 +130,7 @@ function renderScenarioReference(scenario) {
     createText('p', `Primary objective: ${scenario.primaryObjective}`),
     createText('p', `Secondary objectives: ${scenario.secondaryObjectives}`),
     createText('p', `Special rules: ${scenario.specialRules}`),
+    createText('p', `Scenario event: ${scenario.scenarioEvent}`),
     createText('p', `End conditions: ${scenario.endConditions}`),
   );
   if (scenario.npcs && scenario.npcs.length > 0) {
@@ -167,8 +189,9 @@ function renderEventReference(event) {
   node.append(
     createText('h4', event.name),
     createText('p', event.description, 'flavor-text'),
-    createText('p', `Result: ${event.result}`),
+    createText('p', `Result: ${event.result}${event.id==="scenario-event" && !state.selectedScenario ? ' Select a scenario to see the event details.' : " See below:"}`),
   );
+  state.selectedScenario && event.id==="scenario-event" ? node.append(createText('p', `${state.selectedScenario.name} Event Details: ${state.selectedScenario.scenarioEvent}`)) : null;
   return node;
 }
 

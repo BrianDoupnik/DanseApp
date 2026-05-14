@@ -6,6 +6,7 @@ A static web application designed as a companion tracker for the Danse Macabre t
 
 - **Reference Mode**: Browse all game data (scenarios, characters, actions, abilities, events) in a wiki-style layout.
 - **Play Mode**: Guided flow for selecting scenarios and characters, then tracking gameplay elements like rounds, scores, initiative, and random events.
+- Random events are only generated when advancing rounds or when clicking the Generate Event button, not when returning from reference mode.
 - **Data-Driven**: All game content stored in separate JSON files for easy customization.
 - **Static Hosting Ready**: No server-side components; deployable to Firebase, GitLab Pages, GitHub Pages, etc.
 
@@ -15,9 +16,16 @@ A static web application designed as a companion tracker for the Danse Macabre t
 App/
 ├── index.html          # Main HTML page
 ├── styles.css          # Styling and theme
-├── app.js              # Application logic and UI
+├── package.json        # Project metadata
 ├── Documentation.md    # Implementation notes and questions
 ├── README.md           # This file
+├── js/
+│   ├── main.js         # App bootstrap and mode wiring
+│   ├── state.js        # Shared state and DOM refs
+│   ├── data.js         # Data loading and helper utilities
+│   ├── dom.js          # DOM helpers and UI primitives
+│   ├── reference.js    # Reference mode rendering
+│   └── play.js         # Play mode rendering and gameplay logic
 └── data/
     ├── scenarios.json  # Scenario definitions
     ├── characters.json # Character data (references abilities)

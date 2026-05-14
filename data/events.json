@@ -13,6 +13,24 @@
       "result": "All characters must succeed a charm test when \"Probing secrets\" or \"Telling tales\" this round, or gain a chatter token."
     },
     {
+      "id": "song-changes",
+      "name": "Song Changes",
+      "description": "The song finishes, and nobles find new partners before the next one begins.",
+      "result": "At the start of this round, in initiative order, leaders must partner with a different adjacent follower if able, otherwise, decrease your Draw size by 1 and they partner with the same follower if they have no other options, or remain unpartnered if no adjacent followers."
+    },
+    {
+      "id": "orchestral-error",
+      "name": "Orchestral Error",
+      "description": "A mistake in the music causes confusion among the dancers.",
+      "result": "All nobles must succeed a Grace test to move this round, or lose their movement."
+    },
+    {
+      "id": "refreshments-arrive",
+      "name": "Refreshments Arrive",
+      "description": "Refreshments are served, and nobles are revitalized by the delicacies.",
+      "result": "The \"Organize threads\" action automatically succeeds this round."
+    },
+    {
       "id": "scenario-event",
       "name": "Scenario special event",
       "description": "An unexpected occurance... can you make of it an opportunity?",

@@ -1,0 +1,14 @@
+{
+  "factions": [
+    {
+      "id": "house-velours",
+      "name": "House Velours",
+      "flavorText": "A prestigious noble house renowned for its elegance, charm, and mastery of courtly intrigue."
+    },
+    {
+      "id": "house-aurelian",
+      "name": "House Aurelian",
+      "flavorText": "An ancient noble house known for its strategic prowess and influence over the court's affairs."
+    }
+  ]
+}

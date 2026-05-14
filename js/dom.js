@@ -76,7 +76,7 @@ export function createTabs(tabNames, activeTab, onSelect) {
 }
 
 // Show a fullscreen popup overlay for details and modal content.
-export function showPopup(title, contentElements) {
+export function showPopup(title, contentElements, isMultiple=false) {
   const overlay = document.createElement('div');
   overlay.className = 'overlay';
   overlay.addEventListener('click', event => {
@@ -87,6 +87,9 @@ export function showPopup(title, contentElements) {
 
   const popup = document.createElement('div');
   popup.className = 'popup';
+  if (isMultiple) {
+    popup.classList.add('popup-multiple');
+  }
 
   const header = document.createElement('div');
   header.className = 'popup-header';
@@ -136,14 +139,14 @@ export function renderMarkdown(markdown) {
 }
 
 // Create a stat row with increment and decrement controls.
-export function createStatRow(label, value, onChange, maxValue = null) {
+export function createStatRow(label, value, onChange, maxValue = null, minValue = 0) {
   const row = document.createElement('div');
   row.className = 'input-row';
   const labelEl = createText('label', label);
   const valueDisplay = createText('span', value.toString());
   valueDisplay.className = 'stat-value';
   const decrementBtn = createButton('-', () => {
-    const newValue = Math.max(0, value - 1);
+    const newValue = Math.max(minValue, value - 1);
     onChange(newValue);
     valueDisplay.textContent = newValue.toString();
   });

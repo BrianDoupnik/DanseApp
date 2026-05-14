@@ -211,6 +211,12 @@ h1 {
   padding: 1.25rem;
   position: relative;
   box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
+  overflow: auto;
+}
+
+.popup-multiple {
+  display: grid;
+  gap: 1rem;
 }
 
 .popup-close {

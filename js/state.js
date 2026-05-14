@@ -8,6 +8,7 @@ export const state = {
     events: [],
     abilities: [],
     tokens: [],
+    factions: [],
     rules: '',
   },
   selectedScenario: null,
@@ -27,7 +28,7 @@ export const state = {
   gameplayTab: 'Tracker',
   generateEventOnAdvance: false,
   generateEvents: false,
-  generateNpcDancers: false,
+  generateRetinues: false,
   randomizeInitiative: false,
   maxSelectedCharacters: 2,
 };
