@@ -125,7 +125,7 @@ function renderCharacterSelection() {
       createText('h4', character.name),
       createText('p', character.type, 'flavor-text'),
       createText('p', character.flavorText, 'flavor-text'),
-      createText('p', `Grace: ${character.grace} • Charm: ${character.charm}`),
+      createText('p', `Grace: ${character.grace} • Charm: ${character.charm} • Wits: ${character.wits}`),
       createText('p', `Abilities:`),
       ...character.abilities.map(id => {
         const ability = state.data.abilities.find(a => a.id === id);
@@ -170,6 +170,9 @@ function renderCharacterSelection() {
         //state.initiative.push({ name: `Enemy Follower`, value: 0 });
       }
       randomizeInitiativeOrder();
+      if(state.generateEvents) {
+        generateRandomEvent();
+      }
       renderPlayMode();
       window.scrollTo(0, 0);
     }));
@@ -503,7 +506,7 @@ function renderInitiativeTable() {
     const isFollower = false;
 
     leftDiv.appendChild(createText('h4', entry.name, areMyAgents || isNPC ? 'highlighted-text' : '')); 
-    leftDiv.appendChild(createText('p', `Initiative: ${entry.value}`));//, isNPC ? 'flavor-text' : ''));
+    //leftDiv.appendChild(createText('p', `Initiative: ${entry.value}`));//, isNPC ? 'flavor-text' : ''));
     
     // they are sorted in reverse order, 
     // with the highest initiative at the lowest index

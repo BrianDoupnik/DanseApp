@@ -3,7 +3,7 @@
     {
       "id": "move",
       "name": "Move",
-      "description": "If partnered, characters move as a pair, following the pattern of the dance. If unpartnered, characters move independently.",
+      "description": "If partnered, characters move as a pair with their partner, following the pattern of the dance. If unpartnered, characters move independently.",
       "source": "Default action"
     },
     {
@@ -15,7 +15,7 @@
     {
       "id": "tell-tales",
       "name": "Tell Tales",
-      "description": "If adjacent to an enemy, they gain Chatter, or Misinformation if they're next to another of your allies.",
+      "description": "If adjacent to an enemy, they gain Chatter, or Misinformation if that enemy is next to another of your allies.",
       "source": "Default action"
     },
     {

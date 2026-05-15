@@ -1,54 +1,48 @@
 {
   "characters": [
     {
-      "id": "madame-velours",
-      "name": "Madame Velours",
-      "faction": "House Velours",
-      "type": "Follower",
-      "flavorText": "A cunning noble whose poise and grace turn every eye on the ballroom floor.",
-      "grace": 7,
-      "charm": 6,
-      "abilities": ["ribbon-of-influence"]
-    },
-    {
-      "id": "lord-shadowmere",
-      "name": "Lord Shadowmere",
-      "faction": "House Velours",
+      "id": "lorenzo-valtieri",
+      "name": "Duke Lorenzo De Valtieri",
+      "faction": "Valtieri Family",
       "type": "Leader",
-      "flavorText": "A mysterious figure who moves like a shadow through the court, always one step ahead.",
-      "grace": 5,
-      "charm": 8,
-      "abilities": ["shadow-step"]
+      "flavorText": "The calculating and pragmatic head of the family.",
+      "grace": 0,
+      "charm": 0,
+      "wits": 0,
+      "abilities": []
     },
     {
-      "id": "countess-velvet",
-      "name": "Countess Velvet",
-      "faction": "House Velours",
+      "id": "celia-valtieri",
+      "name": "Lady Celia De Valtieri",
+      "faction": "Valtieri Family",
       "type": "Follower",
-      "flavorText": "A noble of refined elegance, known for her diplomatic finesse in the most delicate matters.",
-      "grace": 6,
-      "charm": 7,
-      "abilities": ["velvet-glove"]
+      "flavorText": "Lorenzo's younger sister, an enigmatic beauty rumored to dabble in alchemy.",
+      "grace": 0,
+      "charm": 0,
+      "wits": 0,
+      "abilities": []
     },
-    {
-      "id": "duchess-elegance",
-      "name": "Duchess Elegance",
-      "faction": "House Aurelian",
-      "type": "Follower",
-      "flavorText": "The epitome of refined nobility, her presence commands respect and admiration.",
-      "grace": 8,
-      "charm": 7,
-      "abilities": ["courtly-manners"]
-    },
-    {
-      "id": "baron-deception",
-      "name": "Baron Deception",
-      "faction": "House Aurelian",
+        {
+      "id": "giovanni-corsano",
+      "name": "Giovanni Corsano",
+      "faction": "Corsano Traders",
       "type": "Leader",
-      "flavorText": "A master of intrigue, weaving lies and truths into a tapestry of court politics.",
-      "grace": 6,
-      "charm": 9,
-      "abilities": ["intrigue-weave"]
+      "flavorText": "The patriarch known for consolidating power through daring ventures and black market operations.",
+      "grace": 0,
+      "charm": 0,
+      "wits": 0,
+      "abilities": []
+    },
+        {
+      "id": "marietta-corsano",
+      "name": "Marietta Corsano",
+      "faction": "Corsano Traders",
+      "type": "Follower",
+      "flavorText": "Giovanni's fiercely independent daughter who oversees the family's espionage network.",
+      "grace": 0,
+      "charm": 0,
+      "wits": 0,
+      "abilities": []
     }
   ]
 }

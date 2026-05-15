@@ -1,14 +1,14 @@
 {
   "factions": [
     {
-      "id": "house-velours",
-      "name": "House Velours",
-      "flavorText": "A prestigious noble house renowned for its elegance, charm, and mastery of courtly intrigue."
+      "id": "valtieri-family",
+      "name": "Valtieri Family",
+      "flavorText": "Known for their wealth and extensive trade networks. Seen as shrewd and ambitious, often accused of putting profit above loyalty."
     },
     {
-      "id": "house-aurelian",
-      "name": "House Aurelian",
-      "flavorText": "An ancient noble house known for its strategic prowess and influence over the court's affairs."
+      "id": "corsano-traders",
+      "name": "Corsano Traders",
+      "flavorText": "A powerful family of merchants with a reputation for cutthroat business tactics and clandestine deals. Feared more than loved."
     }
   ]
 }

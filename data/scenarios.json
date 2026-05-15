@@ -5,8 +5,8 @@
       "name": "The Grand Cotillion",
       "flavorText": "A famous heiress has just come of age; suitors from every family of note have gathered to win her favor. Can you outmanuever your rivals to secure the debutante's hand?",
       "primaryObjective": "Players gain one victory point for every round they dance with the debutante",
-      "secondaryObjectives": "Key tokens represent knowledge of the debutante's preferences. While adjacent to the debutante, spend 1 action to gain a key token. Each key token is worth 1 victory point at the end of the game.",
-      "specialRules": "",
+      "secondaryObjectives": "Each key token is worth 1 victory point at the end of the game.",
+      "specialRules": "Key tokens represent knowledge of the debutante's preferences. At the end of the round, if you have a wits token still in your hand, you may exchange it for a key token.",
       "scenarioEvent": "Grand Cotillion Special Event: As an action, nobles adjacent to her may become the debutante's partner this round.",
       "endConditions": "Game ends after 12 rounds.",
       "npcs": [
@@ -31,34 +31,6 @@
           "name": "The Marshal",
           "type": "Leader",
           "description": "The Marshal does not dance, but patrols the ballroom, moving 3 spaces in a random direction each round.  For every noble adjacent to the Marshal after his move, their player must show a random token from their bag.  If it is a Key token, set it aside; otherwise, return it.  If a player has ever revealed 2 Key tokens, they lose."
-        }
-      ]
-    },
-    {
-      "id": "ballroom-breach",
-      "name": "Ballroom Breach",
-      "flavorText": "A scandal threatens the court. Use charm and grace to redirect attention before the hour is lost.",
-      "primaryObjective": "Collect victory points by controlling the social spotlight.",
-      "secondaryObjectives": "Gain bonus points for preserving influence over the most nobles.",
-      "specialRules": "NPC guards may interfere with dance patterns. Random events may force an unplanned duet.",
-      "scenarioEvent": "Ballroom Breach Special Event: As an action, nobles adjacent to her may become the debutante's partner this round.",
-      "endConditions": "Game ends after 6 rounds or when a faction reaches 12 victory points.",
-      "npcs": []
-    },
-    {
-      "id": "masquerade-mystery",
-      "name": "Masquerade Mystery",
-      "flavorText": "Behind the masks, secrets unfold. Unravel the intrigue while maintaining your facade.",
-      "primaryObjective": "Discover and expose hidden alliances to gain victory points.",
-      "secondaryObjectives": "Secure personal favors from revealed nobles.",
-      "specialRules": "Masks conceal identities until challenged. Dance cards may reveal or hide information.",
-      "scenarioEvent": "Masquerade Mystery Special Event: As an action, nobles adjacent to her may become the debutante's partner this round.",
-      "endConditions": "Game ends after 8 rounds or when all masks are removed.",
-      "npcs": [
-        {
-          "name": "The Masked Inquisitor",
-          "type": "Leader",
-          "description": "A mysterious figure probing for secrets, disrupting social harmony."
         }
       ]
     }

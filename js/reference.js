@@ -12,7 +12,7 @@ export function renderCharacterPopup(name) {
       content.push(createCard([
         createText('h4', character.name),
         createText('p', character.type, 'flavor-text'),
-        createText('p', `Grace: ${character.grace} • Charm: ${character.charm}`),
+        createText('p', `Grace: ${character.grace} • Charm: ${character.charm} • Wits: ${character.wits}`),
         createText('p', `Abilities: ${character.abilities.map(ability => state.data.abilities.find(a => a.id === ability)?.name || ability).join(', ')}`),
       ]));
     });
@@ -27,7 +27,7 @@ export function renderCharacterPopup(name) {
     content.push(createText('p', character.type, 'flavor-text'));
     content.push(createText('p', character.flavorText, 'flavor-text'));
     content.push(createText('p', `Faction: ${character.faction}`));
-    content.push(createText('p', `Grace: ${character.grace} • Charm: ${character.charm}`));
+    content.push(createText('p', `Grace: ${character.grace} • Charm: ${character.charm} • Wits: ${character.wits}`));
     if (character.abilities.length) {
       content.push(createText('p', 'Abilities:'));
       character.abilities.forEach(id => {
@@ -151,7 +151,7 @@ function renderCharacterReference(character) {
     createText('h4', `${character.name} — ${character.faction}`),
     createText('p', character.type, 'flavor-text'),
     createText('p', character.flavorText, 'flavor-text'),
-    createText('p', `Grace: ${character.grace} • Charm: ${character.charm}`),
+    createText('p', `Grace: ${character.grace} • Charm: ${character.charm} • Wits: ${character.wits}`),
     createText('p', `Abilities:`),
     ...abilities.map(ability => createText('p', `• ${ability.name}: ${ability.text}`))
   );
