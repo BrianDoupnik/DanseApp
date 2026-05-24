@@ -41,15 +41,15 @@ function renderScenarioSelection() {
   eventCheckbox.addEventListener('change', () => { state.generateEvents = eventCheckbox.checked; });
   eventCheckboxLabel.append(eventCheckbox, createText('span', 'Generate events during gameplay'));
 
-  const retinueLabel = document.createElement('label');
-  retinueLabel.className = 'checkbox-label';
-  const retinueCheckbox = document.createElement('input');
-  retinueCheckbox.type = 'checkbox';
-  retinueCheckbox.checked = state.generateRetinues;
-  retinueCheckbox.addEventListener('change', () => { state.generateRetinues = retinueCheckbox.checked; });
-  retinueLabel.append(retinueCheckbox, createText('span', 'Generate 2 Retinues in the initiative tracker'));
+  const minionLabel = document.createElement('label');
+  minionLabel.className = 'checkbox-label';
+  const minionCheckbox = document.createElement('input');
+  minionCheckbox.type = 'checkbox';
+  minionCheckbox.checked = state.generateMinions;
+  minionCheckbox.addEventListener('change', () => { state.generateMinions = minionCheckbox.checked; });
+  minionLabel.append(minionCheckbox, createText('span', 'Generate 2 Minions in the initiative tracker'));
   
-  const settingsCard = createCard([eventCheckboxLabel, retinueLabel]);
+  const settingsCard = createCard([eventCheckboxLabel, minionLabel]);
   settingsCard.style.display = 'block';
   elements.appContent.appendChild(settingsCard);
 
@@ -163,10 +163,10 @@ function renderCharacterSelection() {
           }
         });
       }
-      if (state.generateRetinues) {
-        state.initiative.push({ name: `Friendly Retinue`, value: 0 });
+      if (state.generateMinions) {
+        state.initiative.push({ name: `Friendly Minion`, value: 0 });
         //state.initiative.push({ name: `Friendly Follower`, value: 0 });
-        state.initiative.push({ name: `Enemy Retinue`, value: 0 });
+        state.initiative.push({ name: `Enemy Minion`, value: 0 });
         //state.initiative.push({ name: `Enemy Follower`, value: 0 });
       }
       randomizeInitiativeOrder();

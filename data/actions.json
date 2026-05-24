@@ -7,39 +7,51 @@
       "source": "Default action"
     },
     {
+      "id": "shift",
+      "name": "Shift",
+      "description": "Minor, Minion: After your first or second square of movement, move 1 square in any direction.",
+      "source": "Default action"
+    },
+    {
+      "id": "partner",
+      "name": "Partner",
+      "description": "Minor, Minion: An unpartnered leader may partner with an adjacent unpartnered follower.",
+      "source": "Default action"
+    },
+    {
       "id": "probe-secret",
       "name": "Probe Secret",
-      "description": "Gain a token from the supply, based on the following rules:\n•Adjacent to an ally: gain Wits or Instructions.\n•Adjacent to an enemy: gain Gossip or Blackmail.\n•Adjacent to an NPC: gain a rumor.",
+      "description": "Major: Gain a token from the supply, based on the following rules:\n•Adjacent to an ally: gain Banter or Instructions.\n•Adjacent to an enemy: gain Gossip or Blackmail.\n•Adjacent to an NPC: gain a rumor.",
       "source": "Default action"
     },
     {
       "id": "tell-tales",
       "name": "Tell Tales",
-      "description": "If adjacent to an enemy, they gain Chatter, or Misinformation if that enemy is next to another of your allies.",
+      "description": "Major: If adjacent to an enemy, they gain Chatter, or Misinformation if that enemy is next to another of your allies.",
       "source": "Default action"
     },
     {
       "id": "read-room",
       "name": "Read the Room",
-      "description": "Speak to the crowd -- test Charm to increase draw size by 1.",
+      "description": "Minor: Speak to the crowd -- test Charm to increase draw size by 1.",
       "source": "Default action"
     },
     {
       "id": "organize-threads",
       "name": "Organize Threads",
-      "description": "Synthesize the information you've learned; test Wits to increase hand size by 1.",
+      "description": "Minor: Synthesize the information you've learned; test Wits to increase hand size by 1.",
       "source": "Default action"
     },
     {
       "id": "give-item",
       "name": "Give Item",
-      "description": "Transfer an item from your inventory to an adjacent ally.",
+      "description": "Major: Transfer an item from your inventory to an adjacent ally.",
       "source": "Default action"
     },
     {
       "id": "take-item",
       "name": "Take Item",
-      "description": "Test Grace to transfer an item from another character's inventory to this character's inventory.",
+      "description": "Major: Test Grace to transfer an item from another character's inventory to this character's inventory.",
       "source": "Default action"
     }
   ]

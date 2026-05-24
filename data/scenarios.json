@@ -4,10 +4,10 @@
       "id": "grand-cotillion",
       "name": "The Grand Cotillion",
       "flavorText": "A famous heiress has just come of age; suitors from every family of note have gathered to win her favor. Can you outmanuever your rivals to secure the debutante's hand?",
-      "primaryObjective": "Players gain one victory point for every round they dance with the debutante",
+      "primaryObjective": "Players gain one victory point at the end of every round if a friendly noble is partnered with the debutante",
       "secondaryObjectives": "Each key token is worth 1 victory point at the end of the game.",
-      "specialRules": "Key tokens represent knowledge of the debutante's preferences. At the end of the round, if you have a wits token still in your hand, you may exchange it for a key token.",
-      "scenarioEvent": "Grand Cotillion Special Event: As an action, nobles adjacent to her may become the debutante's partner this round.",
+      "specialRules": "Key tokens represent knowledge of the debutante's preferences. As a minor action, you may remove a key token from your hand and gain a victory point.  At the end of the round, if you have a wits token still in your hand, you may exchange it for a key token.  On the debutante's turn, if she is adjacent to multiple leaders and one player has more key tokens in their hand, she will break her current partnership, and partner with the leader whose player has more key tokens in hand.",
+      "scenarioEvent": "Grand Cotillion Special Event: As an major action, leaders adjacent to her may become the debutante's partner this round.",
       "endConditions": "Game ends after 12 rounds.",
       "npcs": [
         {
@@ -24,7 +24,7 @@
       "primaryObjective": "Players gain one victory point at the end of every round if they have a friendly noble in each quadrant of the ballroom.",
       "secondaryObjectives": "Players gain one victory point for every Key token left in their opponent's bag at the end of the game.",
       "specialRules": "At the start of the scenario, each player places 3 Key tokens in their bag.  Key tokens represent evidence of treason.",
-      "scenarioEvent": "Treason and Treachery Special Event: This round, as an action, a noble may replace a Key token in their hand with a Misinformation token.",
+      "scenarioEvent": "Treason and Treachery Special Event: This round, as a major action, a noble may replace a Key token in their hand with a Misinformation token.",
       "endConditions": "Game ends after 12 rounds, or if a player loses by having 2 Key tokens revealed by the Marshal.",
       "npcs": [
         {
