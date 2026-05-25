@@ -11,17 +11,17 @@
 4. Activate initiative counts in order.
 
 ## Hand
-At the start of the round, after determining the initiative order, players draw a number of tokens equal to their Draw, until their Hand is full.  These tokens remain through the round.  When a token is played, it is returned to the bag, unless otherwise stated.
+At the start of the round, after determining the initiative order, players draw a number of tokens equal to their Draw, until their Hand is full.  If their hand is completely empty, they may instead draw their Draw Size, and then discard down to their hand size.  These tokens remain through the round.  When a token is played, it is returned to the bag, unless otherwise stated.
 
 - Actions: action tokens may be played in place of a noble's action.
 
 - Interrupts: may be played any time their trigger occurs.
 
-At the end of the round, players may choose to discard any or all tokens in their hand.
+At the end of the round, players may choose to discard any or all tokens in their hand, and must discard down to their hand size.
 
 ## Activations
 
-When an initiative count activates, the player may activate the pair of characters in any combination.  Each character gets one major and one minor action, which they may take from either the standard action list, their own abilities, or the the scenario event.  If a token is played, it returned to the player's bag, unless otherwise specified.
+When an initiative count activates, the player may activate the pair of characters in any combination.  Each character gets one major and one minor action, which they may take from either the standard action list, their own abilities, or the the scenario event.  Major actions may be exchanged for minor actions, if desired.  If a token is played, it returned to the player's bag, unless otherwise specified.
 
 Additionally, movement is always a free and required action.
 
@@ -32,6 +32,8 @@ If partnered:
 - Followers may not move and are placed by the leader after his movement
 
 - If a leader collides with another model, they end their movement immediately.
+
+- The Shift action must be taken as a part of the movement; other actions cannot be taken between Move and Shift.
 
 If not partnered:
 

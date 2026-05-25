@@ -8,49 +8,49 @@
     },
     {
       "id": "shift",
-      "name": "Shift",
+      "name": "Shift (Minor)",
       "description": "Minor, Minion: After your first or second square of movement, move 1 square in any direction.",
       "source": "Default action"
     },
     {
       "id": "partner",
-      "name": "Partner",
+      "name": "Partner (Minor)",
       "description": "Minor, Minion: An unpartnered leader may partner with an adjacent unpartnered follower.",
       "source": "Default action"
     },
     {
-      "id": "probe-secret",
-      "name": "Probe Secret",
+      "id": "gain-token",
+      "name": "Gain Token (Major)",
       "description": "Major: Gain a token from the supply, based on the following rules:\n•Adjacent to an ally: gain Banter or Instructions.\n•Adjacent to an enemy: gain Gossip or Blackmail.\n•Adjacent to an NPC: gain a rumor.",
       "source": "Default action"
     },
     {
-      "id": "tell-tales",
-      "name": "Tell Tales",
+      "id": "give-token",
+      "name": "Give Token (Major)",
       "description": "Major: If adjacent to an enemy, they gain Chatter, or Misinformation if that enemy is next to another of your allies.",
       "source": "Default action"
     },
     {
-      "id": "read-room",
-      "name": "Read the Room",
+      "id": "increase-draw",
+      "name": "Increase Draw (Minor)",
       "description": "Minor: Speak to the crowd -- test Charm to increase draw size by 1.",
       "source": "Default action"
     },
     {
-      "id": "organize-threads",
-      "name": "Organize Threads",
+      "id": "increase-hand",
+      "name": "Increase Hand (Minor)",
       "description": "Minor: Synthesize the information you've learned; test Wits to increase hand size by 1.",
       "source": "Default action"
     },
     {
       "id": "give-item",
-      "name": "Give Item",
+      "name": "Give Item (Major)",
       "description": "Major: Transfer an item from your inventory to an adjacent ally.",
       "source": "Default action"
     },
     {
       "id": "take-item",
-      "name": "Take Item",
+      "name": "Take Item (Major)",
       "description": "Major: Test Grace to transfer an item from another character's inventory to this character's inventory.",
       "source": "Default action"
     }
